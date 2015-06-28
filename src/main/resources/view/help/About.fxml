@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" onMouseClicked="#contentCLick" prefWidth="400.0" style="-fx-border-width: 1; -fx-border-color: #000000;" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.help.AboutController">
+  <children>
+    <VBox alignment="CENTER" onDragDetected="#contentCLick" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <children>
+        <ImageView fitHeight="250.0" fitWidth="250.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+          <image>
+            <Image url="@../../files/images/unipi_logo.jpg" />
+          </image>
+          <VBox.margin>
+            <Insets />
+          </VBox.margin>
+        </ImageView>
+        <Label styleClass="boldLetters" text="ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΙΡΑΙΑ" />
+            <Label text="ΤΜΗΜΑ ΠΛΗΡΟΦΟΡΙΚΗΣ" />
+            <Label text="ΚΑΤΑΝΕΜΗΜΕΝΗ ΤΕΧΝΗΤΗ ΝΟΥΜΟΣΥΝΗ 2015" />
+            <Label prefHeight="60.0" text="Κατασκευάστηκε στο πλαίσιο εργασίας του μαθήματος από τον φοιτητή" textAlignment="CENTER" wrapText="true">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Label>
+            <Label text="ΣΥΓΓΟΥΡΟΓΛΟΥ Γεώργιο Π08138">
+               <padding>
+                  <Insets bottom="10.0" />
+               </padding>
+            </Label>
+      </children>
+    </VBox>
+  </children>
+  <padding>
+    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+  </padding>
+  <stylesheets>
+        <URL value="@/files/css/mainscene.css" />
+  </stylesheets>
+</AnchorPane>

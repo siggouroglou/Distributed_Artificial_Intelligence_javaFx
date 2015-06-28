@@ -1,0 +1,63 @@
+/*
+ * Empty Stylesheet file.
+*/
+
+
+#scenarioReStartButton {
+  -fx-graphic: url("../images/scenario/repeat.png");
+}
+
+#scenarioStartButton {
+  -fx-graphic: url("../images/scenario/play.png");
+}
+
+#scenarioPauseButton {
+  -fx-graphic: url("../images/scenario/pause.png");
+}
+
+#scenarioStopButton {
+  -fx-graphic: url("../images/scenario/stop.png");
+}
+/*
+#shapeListContainerScrolPane {
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: #D7D7D7;
+    -fx-border-width:  1 1 1 1;
+}
+
+#shapeListContainer {
+    -fx-background-color: #FFFFFF00;
+}
+
+#footerContainer {
+    -fx-background-color: linear-gradient(to bottom, #F9F9F9, #E7E7E7);
+    -fx-border-radius: 0;
+    -fx-border-insets: 1;
+    -fx-border-color: #D7D7D7;
+    -fx-border-width:  1 0 0 0;
+}
+
+.palet-button {
+     -fx-pref-width: 32px;
+     -fx-max-width: 32px;
+     -fx-min-width: 50px;
+     -fx-pref-height: 32px;
+     -fx-max-height: 32px;
+     -fx-min-height: 50px;
+}
+
+.shapeListItem {
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: #D7D7D7;
+    -fx-border-width:  1 1 1 1;
+}
+
+.shapeListItem:hover,
+.shapeListItem:pressed {
+    -fx-border-radius: 0;
+    -fx-border-insets: 0;
+    -fx-border-color: #A0A0A0;
+    -fx-border-width:  1 1 1 1;
+}*/

@@ -7,11 +7,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>KatanemimeniTexnitiNoumosuni</name>
+    <name>Katanemimeni Texniti Noumosuni</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>gr.unipi.ergasia.MainApp</mainClass>
+        <mainClass>gr.unipi.ergasia.StartUp</mainClass>
     </properties>
 
     <organization>
