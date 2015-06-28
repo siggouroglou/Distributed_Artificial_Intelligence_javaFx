@@ -1,0 +1,54 @@
+
+
+.mainFxmlClass {
+    -fx-background-image: url("../../images/main-background.jpg");
+    -fx-background-position: center center;
+    -fx-font-size: 14px;
+    -fx-font-family: "Arial";
+    -fx-fill: #818181;
+}
+
+.title-small {
+    -fx-font-size: 14px;
+    -fx-fill: #818181;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.title-norm {
+    -fx-font-size: 16px;
+    -fx-fill: #818181;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.title-big {
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial";
+    -fx-fill: #818181;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.title-extra-big {
+    -fx-font-size: 26px;
+    -fx-font-family: "Arial";
+    -fx-fill: #818181;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.title-description{
+    -fx-font-size: 12px;
+    -fx-font-family: "Arial";
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 0;
+}
+
+.error-text {
+    -fx-text-fill: red;
+}
