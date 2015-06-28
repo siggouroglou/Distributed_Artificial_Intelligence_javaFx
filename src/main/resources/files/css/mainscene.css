@@ -2,6 +2,23 @@
  * Empty Stylesheet file.
 */
 
+
+#scenarioReStartButton {
+  -fx-graphic: url("../images/scenario/repeat.png");
+}
+
+#scenarioStartButton {
+  -fx-graphic: url("../images/scenario/play.png");
+}
+
+#scenarioPauseButton {
+  -fx-graphic: url("../images/scenario/pause.png");
+}
+
+#scenarioStopButton {
+  -fx-graphic: url("../images/scenario/stop.png");
+}
+/*
 #shapeListContainerScrolPane {
     -fx-border-radius: 0;
     -fx-border-insets: 0;
@@ -21,45 +38,13 @@
     -fx-border-width:  1 0 0 0;
 }
 
-#shapeLineButton {
-  -fx-graphic: url("../../images/shapeLine.png");
-}
-
-#shapeCircleButton {
-  -fx-graphic: url("../../images/shapeCircle.png");
-}
-
-#shapeTriangleButton {
-  -fx-graphic: url("../../images/shapeTriangle.png");
-}
-
-#shapeSquareButton {
-  -fx-graphic: url("../../images/shapeSquare.png");
-}
-
-#shapeRectButton {
-  -fx-graphic: url("../../images/shapeRect.png");
-}
-
-#shapePolygonButton {
-  -fx-graphic: url("../../images/shapePolygon.png");
-}
-
-#shapeCrookedButton {
-  -fx-graphic: url("../../images/shapeCrooked.png");
-}
-
-#shapeFreeHandButton {
-  -fx-graphic: url("../../images/shapeFreeHand.png");
-}
-
 .palet-button {
      -fx-pref-width: 32px;
-/*     -fx-max-width: 32px;
-     -fx-min-width: 50px;*/
+     -fx-max-width: 32px;
+     -fx-min-width: 50px;
      -fx-pref-height: 32px;
-/*     -fx-max-height: 32px;
-     -fx-min-height: 50px;*/
+     -fx-max-height: 32px;
+     -fx-min-height: 50px;
 }
 
 .shapeListItem {
@@ -75,4 +60,4 @@
     -fx-border-insets: 0;
     -fx-border-color: #A0A0A0;
     -fx-border-width:  1 1 1 1;
-}
+}*/
