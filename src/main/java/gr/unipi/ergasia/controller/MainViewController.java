@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,12 +24,6 @@ import javafx.stage.StageStyle;
  * @author siggouroglou
  */
 public class MainViewController implements Initializable {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private Label environmentDimensionsLabel;
@@ -124,8 +119,22 @@ public class MainViewController implements Initializable {
     }
 
     @FXML
-    void editSettingsClick(ActionEvent event) {
+    void editSettingsClick(ActionEvent event) throws IOException {
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage editSettingsStage = new Stage();
+        editSettingsStage.initModality(Modality.WINDOW_MODAL);
+        editSettingsStage.initOwner(currentStage);
+        editSettingsStage.setTitle("Ρυθμίσεις");
+        editSettingsStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/SettingsView.fxml"));
+        Parent root = (Parent) loader.load();
+        editSettingsStage.setScene(new Scene(root));
+
+        /// Show it.
+        editSettingsStage.show();
     }
     //</editor-fold>
 

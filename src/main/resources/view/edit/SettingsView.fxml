@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefWidth="400.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.edit.SettingsController">
+    <stylesheets>
+        <URL value="@/files/css/commons.css" />
+    </stylesheets>
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label styleClass="title-big" text="Ρυθμισεις" />
+            <Label styleClass="title-description" text="Ρυθμιστε τις προεπιλεγμενες τιμες που επιθυμειτε." wrapText="true" />
+            <VBox spacing="2.0">
+               <children>
+                  <Label text="Τοποθεσια Περιβαλλοντος" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField fx:id="environmentPathTextField" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#environmentButtonClick" text="Αρχεια" />
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </VBox>
+            <VBox layoutX="20.0" layoutY="89.0" spacing="2.0">
+               <children>
+                  <Label text="Τοποθεσια Πλανων" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField fx:id="agentPlanPathTextField" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#agentPlanButtonClick" text="Αρχεια" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="20.0" layoutY="89.0" spacing="2.0">
+               <children>
+                  <Label text="Τοποθεσια Στατιστικων" />
+                  <HBox spacing="5.0">
+                     <children>
+                        <TextField fx:id="statisticPathTextField" onAction="#statisticButtonClick" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#statisticButtonClick" text="Αρχεια" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Label fx:id="errorLabel" prefHeight="40.0" styleClass="error-text" wrapText="true">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Ακυρο" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#saveClick" text="Αποθηκευση" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
