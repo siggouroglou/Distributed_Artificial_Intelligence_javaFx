@@ -42,7 +42,7 @@
          <bottom>
             <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Κλεισιμο" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#completeCLick" text="Ολοκληρωση" />
                </children>
             </HBox>
          </bottom>

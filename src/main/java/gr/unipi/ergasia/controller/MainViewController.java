@@ -2,14 +2,9 @@ package gr.unipi.ergasia.controller;
 
 import gr.unipi.ergasia.controller.edit.AgentPlanManagementController;
 import gr.unipi.ergasia.controller.help.AboutController;
-import gr.unipi.ergasia.model.AgentPlan;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -182,6 +175,7 @@ public class MainViewController implements Initializable {
     }
 
     //</editor-fold>
+    
     @FXML
     void scenarioReStartClick(ActionEvent event) {
 
