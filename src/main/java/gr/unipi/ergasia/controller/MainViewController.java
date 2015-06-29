@@ -1,6 +1,7 @@
 package gr.unipi.ergasia.controller;
 
 import gr.unipi.ergasia.controller.edit.AgentPlanManagementController;
+import gr.unipi.ergasia.controller.edit.EnvironmentManagementController;
 import gr.unipi.ergasia.controller.help.AboutController;
 import java.io.IOException;
 import java.net.URL;
@@ -110,8 +111,26 @@ public class MainViewController implements Initializable {
 
     //<editor-fold defaultstate="collapsed" desc="Edit">
     @FXML
-    void editEnvironmentManagementClick(ActionEvent event) {
+    void editEnvironmentManagementClick(ActionEvent event) throws IOException {
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage agentPlanManagementStage = new Stage();
+        agentPlanManagementStage.initModality(Modality.WINDOW_MODAL);
+        agentPlanManagementStage.initOwner(currentStage);
+        agentPlanManagementStage.setTitle("ΚΤΝ - Διαχείριση Περιβάλλοντος");
+        agentPlanManagementStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/EnvironmentManagementView.fxml"));
+        Parent root = (Parent) loader.load();
+        agentPlanManagementStage.setScene(new Scene(root));
+        
+        // Initialize the controller.
+        EnvironmentManagementController controller = (EnvironmentManagementController)loader.getController();
+        controller.initialize();
+        
+        /// Show it.
+        agentPlanManagementStage.show();
     }
 
     @FXML
@@ -130,7 +149,7 @@ public class MainViewController implements Initializable {
         agentPlanManagementStage.setScene(new Scene(root));
         
         // Initialize the controller.
-        AgentPlanManagementController controller = (AgentPlanManagementController)loader.getController();  
+        AgentPlanManagementController controller = (AgentPlanManagementController)loader.getController();
         controller.initialize();
         
         /// Show it.

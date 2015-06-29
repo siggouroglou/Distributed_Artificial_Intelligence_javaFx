@@ -1,5 +1,8 @@
 package gr.unipi.ergasia.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
  * @author siggouroglou@gmail.com
@@ -9,14 +12,14 @@ public class Environment {
     private int width;
     private int height;
     private int agentCount;
-    private StadiumIncredience[][] stadium;
+    private List<List<StadiumIncredience>> stadium;
 
     public Environment() {
         this.title = "";
         this.width = 0;
         this.height = 0;
         this.agentCount = 0;
-        this.stadium = null;
+        this.stadium = new LinkedList<>();
     }
 
     public String getTitle() {
@@ -51,11 +54,11 @@ public class Environment {
         this.agentCount = agentCount;
     }
 
-    public StadiumIncredience[][] getStadium() {
+    public List<List<StadiumIncredience>> getStadium() {
         return stadium;
     }
 
-    public void setStadium(StadiumIncredience[][] stadium) {
+    public void setStadium(List<List<StadiumIncredience>> stadium) {
         this.stadium = stadium;
     }
 }
