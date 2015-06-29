@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefWidth="500.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.edit.AgentPlanManagementCreateController">
+    <stylesheets>
+        <URL value="@/files/css/commons.css" />
+    </stylesheets>
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label styleClass="title-big" text="Εισαγωγη Πλανου Πρακτορα" />
+            <Label prefHeight="40.0" styleClass="title-description" text="Σε αυτη τη φορμα μπορειτε να δημιουργησετε ενα νεο πλανο πρακτορα." wrapText="true" />
+            <VBox spacing="5.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label text="Τιτλος:" />
+                        <TextField fx:id="titleTextField" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#addNewActionClick" text="+ Προσθηκη Ενεργειας Πλανου" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin></Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <VBox fx:id="actionContainer" maxHeight="1.7976931348623157E308" minHeight="100.0" spacing="5.0">
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </VBox>
+            <Label fx:id="errorLabel" prefHeight="40.0" styleClass="error-text" wrapText="true">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Ακυρο" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#saveClick" text="Αποθηκευση" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

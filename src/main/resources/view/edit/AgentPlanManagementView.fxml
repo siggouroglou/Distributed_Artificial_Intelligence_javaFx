@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefWidth="500.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.edit.AgentPlanManagementController">
+    <stylesheets>
+        <URL value="@/files/css/commons.css" />
+    </stylesheets>
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <Label styleClass="title-big" text="Διαχειριση Πλανων Πρακτορων" />
+                  <Label prefHeight="40.0" styleClass="title-description" text="Μπορειται να διαχειριστειτε (εισαγωγη, επεξεργασια, διαγραφη) τα πλανα των πρακτορων του προγραμματος." wrapText="true" />
+               </children>
+            </VBox>
+         </top>
+         <center>
+            <VBox spacing="5.0">
+               <children>
+                  <TableView fx:id="tableView" prefHeight="250.0" VBox.vgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" spacing="5.0">
+                     <children>
+                        <Button fx:id="deleteRowButton" mnemonicParsing="false" onAction="#deleteRowClick" text="Διαγραφη" />
+                        <Button fx:id="editRowButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#editRowClick" text="Επεξεργασια" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#createRowClick" text="Δημιουργια Νεου" />
+                     </children>
+                  </HBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="20.0" top="15.0" />
+               </BorderPane.margin>
+            </VBox>
+         </center>
+         <bottom>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#completeCLick" text="Ολοκληρωση" />
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>

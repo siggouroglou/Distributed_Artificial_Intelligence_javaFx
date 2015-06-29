@@ -1,5 +1,6 @@
 package gr.unipi.ergasia.controller;
 
+import gr.unipi.ergasia.controller.edit.AgentPlanManagementController;
 import gr.unipi.ergasia.controller.help.AboutController;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,12 +25,6 @@ import javafx.stage.StageStyle;
  * @author siggouroglou
  */
 public class MainViewController implements Initializable {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private Label environmentDimensionsLabel;
@@ -119,13 +115,45 @@ public class MainViewController implements Initializable {
     }
 
     @FXML
-    void editAgentPlanManagementClick(ActionEvent event) {
+    void editAgentPlanManagementClick(ActionEvent event) throws IOException {
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage agentPlanManagementStage = new Stage();
+        agentPlanManagementStage.initModality(Modality.WINDOW_MODAL);
+        agentPlanManagementStage.initOwner(currentStage);
+        agentPlanManagementStage.setTitle("ΚΤΝ - Διαχείριση Πλάνων Πρακτόρων");
+        agentPlanManagementStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/AgentPlanManagementView.fxml"));
+        Parent root = (Parent) loader.load();
+        agentPlanManagementStage.setScene(new Scene(root));
+        
+        // Initialize the controller.
+        AgentPlanManagementController controller = (AgentPlanManagementController)loader.getController();  
+        controller.initialize();
+        
+        /// Show it.
+        agentPlanManagementStage.show();
     }
 
     @FXML
-    void editSettingsClick(ActionEvent event) {
+    void editSettingsClick(ActionEvent event) throws IOException {
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage settingsStage = new Stage();
+        settingsStage.initModality(Modality.WINDOW_MODAL);
+        settingsStage.initOwner(currentStage);
+        settingsStage.setTitle("Ρυθμίσεις");
+        settingsStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/SettingsView.fxml"));
+        Parent root = (Parent) loader.load();
+        settingsStage.setScene(new Scene(root));
+
+        /// Show it.
+        settingsStage.show();
     }
     //</editor-fold>
 
@@ -147,6 +175,7 @@ public class MainViewController implements Initializable {
     }
 
     //</editor-fold>
+    
     @FXML
     void scenarioReStartClick(ActionEvent event) {
 
