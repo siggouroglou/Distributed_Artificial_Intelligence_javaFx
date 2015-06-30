@@ -1,12 +1,13 @@
 package gr.unipi.ergasia.controller.edit;
 
-import gr.unipi.ergasia.lib.manager.AgentPlanManager;
-import gr.unipi.ergasia.model.AgentPlan;
+import gr.unipi.ergasia.lib.manager.EnvironmentManager;
+import gr.unipi.ergasia.model.Environment;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,10 +31,10 @@ import org.controlsfx.dialog.Dialogs;
  *
  * @author siggouroglou
  */
-public class AgentPlanManagementController implements Initializable {
+public class EnvironmentManagementController implements Initializable {
 
     @FXML
-    private TableView<AgentPlan> tableView;
+    private TableView<Environment> tableView;
     @FXML
     private Button editRowButton;
     @FXML
@@ -58,15 +59,19 @@ public class AgentPlanManagementController implements Initializable {
         deleteRowButton.visibleProperty().bind(Bindings.isNotNull(tableView.getSelectionModel().selectedItemProperty()));
 
         // Set the data to the table view.
-        tableView.setItems(AgentPlanManager.getInstance().getAgentPlanList());
+        tableView.setItems(EnvironmentManager.getInstance().getEnvironmentList());
 
-        TableColumn<AgentPlan, String> column1 = new TableColumn<>("Τίτλος");
+        TableColumn<Environment, String> column1 = new TableColumn<>("Τίτλος");
         column1.setCellValueFactory(new PropertyValueFactory("title"));
-        TableColumn<AgentPlan, Integer> column2 = new TableColumn("Πλήθος Ενεργειών");
+        TableColumn<Environment, String> column2 = new TableColumn("Διάσταση");
         column2.setCellValueFactory(cellData -> {
-            return new SimpleIntegerProperty(((AgentPlan) cellData.getValue()).getActionList().size()).asObject();
+            return new SimpleStringProperty(cellData.getValue().getWidth() + "x" + cellData.getValue().getHeight());
         });
-        tableView.getColumns().setAll(column1, column2);
+        TableColumn<Environment, Integer> column3 = new TableColumn("Πλήθος Πρακτόρων");
+        column3.setCellValueFactory(cellData -> {
+            return new SimpleIntegerProperty(cellData.getValue().getAgentCount()).asObject();
+        });
+        tableView.getColumns().setAll(column1, column2, column3);
 
         // Set some policies for table view.
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -80,7 +85,7 @@ public class AgentPlanManagementController implements Initializable {
     @FXML
     void completeCLick(ActionEvent event) {
         // Save changes to disk.
-        AgentPlanManager.getInstance().exportData();
+        EnvironmentManager.getInstance().exportData();
         
         // Close the stage.
         getStage().close();
@@ -93,11 +98,11 @@ public class AgentPlanManagementController implements Initializable {
         Stage createStage = new Stage();
         createStage.initModality(Modality.WINDOW_MODAL);
         createStage.initOwner(currentStage);
-        createStage.setTitle("ΚΤΝ - Εισαγωγή Πλάνου Πράκτορα");
+        createStage.setTitle("ΚΤΝ - Εισαγωγή Περιβάλλοντος");
         createStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
         // Load the view.
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/AgentPlanManagementCreateView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/EnvironmentManagementCreateView.fxml"));
         Parent root = (Parent) loader.load();
         createStage.setScene(new Scene(root));
         
@@ -112,16 +117,16 @@ public class AgentPlanManagementController implements Initializable {
         Stage editStage = new Stage();
         editStage.initModality(Modality.WINDOW_MODAL);
         editStage.initOwner(currentStage);
-        editStage.setTitle("ΚΤΝ - Επεξεργασία Πλάνου Πράκτορα");
+        editStage.setTitle("ΚΤΝ - Επεξεργασία Περιβάλλοντος");
         editStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
 
         // Load the view.
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/AgentPlanManagementEditView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/EnvironmentManagementEditView.fxml"));
         Parent root = (Parent) loader.load();
         editStage.setScene(new Scene(root));
         
-        AgentPlanManagementEditController controller = (AgentPlanManagementEditController)loader.getController();        
-        controller.setAgentPlan(tableView.getSelectionModel().selectedItemProperty().get());
+        EnvironmentManagementEditController controller = (EnvironmentManagementEditController)loader.getController();        
+        controller.setEnvironment(tableView.getSelectionModel().selectedItemProperty().get());
         controller.setTableView(tableView);
         controller.loadData();
         
@@ -140,8 +145,8 @@ public class AgentPlanManagementController implements Initializable {
 
         // User click to ok button.
         if (response == Dialog.Actions.YES) {
-            AgentPlan agentPlan = tableView.getSelectionModel().selectedItemProperty().get();
-            tableView.getItems().remove(agentPlan);
+            Environment environment = tableView.getSelectionModel().selectedItemProperty().get();
+            tableView.getItems().remove(environment);
         }
     }
 

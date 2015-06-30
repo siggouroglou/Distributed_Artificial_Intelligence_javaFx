@@ -2,6 +2,8 @@ package gr.unipi.ergasia.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -10,31 +12,31 @@ import java.util.List;
 public enum StadiumIncredience {
 
     AGENT("AGENT.png", "AGENT"),
-    SPITI_AGENT("SPITI_AGENT.png", "SPITI"),
-    PRASINO("PRASINO.png", "PRASI"),
-    DROMOS_EUTHEIA_1("DROMOS_EUTHEIA_1.png", "D_E_1"),
-    DROMOS_EUTHEIA_2("DROMOS_EUTHEIA_2.png", "D_E_2"),
-    DROMOS_GONIA_1("DROMOS_GONIA_1.png", "D_G_1"),
-    DROMOS_GONIA_2("DROMOS_GONIA_2.png", "D_G_2"),
-    DROMOS_GONIA_3("DROMOS_GONIA_3.png", "D_G_3"),
-    DROMOS_GONIA_4("DROMOS_GONIA_4.png", "D_G_4"),
-    DROMOS_TAF_1("DROMOS_TAF_1.png", "D_T_1"),
-    DROMOS_TAF_2("DROMOS_TAF_2.png", "D_T_2"),
-    DROMOS_TAF_3("DROMOS_TAF_3.png", "D_T_3"),
-    DROMOS_TAF_4("DROMOS_TAF_4.png", "D_T_4"),
-    DROMOS_DIASTAUROSI("DROMOS_DIASTAUROSI.png", "D_D_1"),
-    ASTYNOMIA("ASTYNOMIA.png", "ASTYN"),
-    FOURNOS("FOURNOS.png", "FOURN"),
-    DIMARXEIO("DIMARXEIO.png", "DIMAR"),
-    FARMAKEIO("FARMAKEIO.png", "FARMA"),
-    FAST_FOOD("FAST_FOOD.png", "FAS_F"),
-    GUMNASTIRIO("GUMNASTIRIO.png", "GUMNA"),
-    KAFETERIA("KAFETERIA.png", "KAFET"),
-    KREOPOLEIO("KREOPOLEIO.png", "KREOP"),
-    MAGAZI_PAPOUTSIA("MAGAZI_PAPOUTSIA.png", "M_PAP"),
-    MAGAZI_ROUXA("MAGAZI_ROUXA.png", "M_ROU"),
-    MANABIKO("MANABIKO.png", "MANAB"),
-    KENOS_XOROS("KENOS_XOROS.png", "KENOS");
+    SPITI_AGENT("SPITI_AGENT.jpg", "SPITI"),
+    PRASINO("PRASINO.jpg", "PRASI"),
+    DROMOS_EUTHEIA_1("DROMOS_EUTHEIA_1.jpg", "D_E_1"),
+    DROMOS_EUTHEIA_2("DROMOS_EUTHEIA_2.jpg", "D_E_2"),
+    DROMOS_GONIA_1("DROMOS_GONIA_1.jpg", "D_G_1"),
+    DROMOS_GONIA_2("DROMOS_GONIA_2.jpg", "D_G_2"),
+    DROMOS_GONIA_3("DROMOS_GONIA_3.jpg", "D_G_3"),
+    DROMOS_GONIA_4("DROMOS_GONIA_4.jpg", "D_G_4"),
+    DROMOS_TAF_1("DROMOS_TAF_1.jpg", "D_T_1"),
+    DROMOS_TAF_2("DROMOS_TAF_2.jpg", "D_T_2"),
+    DROMOS_TAF_3("DROMOS_TAF_3.jpg", "D_T_3"),
+    DROMOS_TAF_4("DROMOS_TAF_4.jpg", "D_T_4"),
+    DROMOS_DIASTAUROSI("DROMOS_DIASTAUROSI.jpg", "D_D_1"),
+    ASTYNOMIA("ASTYNOMIA.jpg", "ASTYN"),
+    FOURNOS("FOURNOS.jpg", "FOURN"),
+    DIMARXEIO("DIMARXEIO.jpg", "DIMAR"),
+    FARMAKEIO("FARMAKEIO.jpg", "FARMA"),
+    FAST_FOOD("FAST_FOOD.jpg", "FAS_F"),
+    GUMNASTIRIO("GUMNASTIRIO.jpg", "GUMNA"),
+    KAFETERIA("KAFETERIA.jpg", "KAFET"),
+    KREOPOLEIO("KREOPOLEIO.jpg", "KREOP"),
+    MAGAZI_PAPOUTSIA("MAGAZI_PAPOUTSIA.jpg", "M_PAP"),
+    MAGAZI_ROUXA("MAGAZI_ROUXA.jpg", "M_ROU"),
+    MANABIKO("MANABIKO.jpg", "MANAB"),
+    KENOS_XOROS("KENOS_XOROS.jpg", "KENOS");
 
     public static StadiumIncredience initFromVocabulary(String vocabulary) {
         switch (vocabulary) {
@@ -124,6 +126,36 @@ public enum StadiumIncredience {
         linkedList.add(MAGAZI_ROUXA);
         linkedList.add(MANABIKO);
 
+        return linkedList;
+    }
+
+    public static List<StadiumIncredience> getAllRoads() {
+        LinkedList<StadiumIncredience> linkedList = new LinkedList<>();
+        linkedList.add(DROMOS_EUTHEIA_1);
+        linkedList.add(DROMOS_EUTHEIA_2);
+        linkedList.add(DROMOS_GONIA_1);
+        linkedList.add(DROMOS_GONIA_2);
+        linkedList.add(DROMOS_GONIA_3);
+        linkedList.add(DROMOS_GONIA_4);
+        linkedList.add(DROMOS_TAF_1);
+        linkedList.add(DROMOS_TAF_2);
+        linkedList.add(DROMOS_TAF_3);
+        linkedList.add(DROMOS_TAF_4);
+        linkedList.add(DROMOS_DIASTAUROSI);
+
+        return linkedList;
+    }
+
+    public static List<StadiumIncredience> getAllNodes() {
+        List<StadiumIncredience> allBuildings = getAllBuildings();
+        List<StadiumIncredience> allRoads = getAllRoads();
+        List<StadiumIncredience> buildingsWithRoadsList = Stream.concat(allBuildings.stream(), allRoads.stream()).collect(Collectors.toList());
+        
+        LinkedList<StadiumIncredience> linkedList = new LinkedList<>(buildingsWithRoadsList);
+        linkedList.add(SPITI_AGENT);
+        linkedList.add(PRASINO);
+        linkedList.add(KENOS_XOROS);
+        
         return linkedList;
     }
 

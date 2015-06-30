@@ -58,7 +58,7 @@ public class AgentPlanManager {
                     }
                 }
             } catch (IOException ex) {
-                logger.log(Level.ERROR, "An error occurred with loading the instance.", ex);
+                logger.log(Level.ERROR, "An error occurred with loading the agent plan instance.", ex);
             }
 
             // In case of an agent plan that contains actions.

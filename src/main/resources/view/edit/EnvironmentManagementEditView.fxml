@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.edit.EnvironmentManagementEditController">
+    <stylesheets>
+        <URL value="@/files/css/commons.css" />
+    </stylesheets>
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label styleClass="title-big" text="Εισαγωγη Περιβαλλοντος" />
+            <Label prefHeight="40.0" styleClass="title-description" text="Σε αυτη τη φορμα μπορειτε να δημιουργησετε ενα νεο περιβαλλον." wrapText="true" />
+            <GridPane minHeight="60.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.0" minWidth="10.0" prefWidth="92.0" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="388.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="Διαστασεις:" GridPane.rowIndex="1" />
+                  <Label text="Τιτλος:" />
+                  <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <TextField fx:id="widthTextField" layoutX="1.0" HBox.hgrow="ALWAYS" />
+                        <Label layoutX="1.0" text="x" />
+                        <TextField fx:id="heightTextField" HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" onAction="#resetGridClick" prefWidth="250.0" text="Επανακαθορισμος" />
+                     </children>
+                  </HBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </GridPane>
+            <BorderPane prefHeight="400.0" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+               <center>
+                  <ScrollPane fx:id="containerGrid" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <ListView fx:id="incredienceList" prefWidth="250.0" />
+               </right>
+            </BorderPane>
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Button fx:id="cleanGridButton" mnemonicParsing="false" onAction="#cleanGridClick" text="Επαναφορα Επιλογων" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <Label fx:id="errorLabel" prefHeight="40.0" styleClass="error-text" wrapText="true">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#cancelClick" text="Ακυρο" />
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#saveClick" text="Αποθηκευση" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
