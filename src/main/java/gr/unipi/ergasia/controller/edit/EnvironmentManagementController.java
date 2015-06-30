@@ -93,21 +93,21 @@ public class EnvironmentManagementController implements Initializable {
 
     @FXML
     void createRowClick(ActionEvent event) throws IOException {
-//        // Stages and owners.
-//        Stage currentStage = getStage();
-//        Stage createStage = new Stage();
-//        createStage.initModality(Modality.WINDOW_MODAL);
-//        createStage.initOwner(currentStage);
-//        createStage.setTitle("ΚΤΝ - Εισαγωγή Πλάνου Πράκτορα");
-//        createStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
-//
-//        // Load the view.
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/AgentPlanManagementCreateView.fxml"));
-//        Parent root = (Parent) loader.load();
-//        createStage.setScene(new Scene(root));
-//        
-//        /// Show it.
-//        createStage.show();
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage createStage = new Stage();
+        createStage.initModality(Modality.WINDOW_MODAL);
+        createStage.initOwner(currentStage);
+        createStage.setTitle("ΚΤΝ - Εισαγωγή Περιβάλλοντος");
+        createStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
+
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/EnvironmentManagementCreateView.fxml"));
+        Parent root = (Parent) loader.load();
+        createStage.setScene(new Scene(root));
+        
+        /// Show it.
+        createStage.show();
     }
 
     @FXML
