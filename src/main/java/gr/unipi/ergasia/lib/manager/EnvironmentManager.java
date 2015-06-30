@@ -2,7 +2,6 @@ package gr.unipi.ergasia.lib.manager;
 
 import gr.unipi.ergasia.lib.Settings;
 import gr.unipi.ergasia.model.Environment;
-import gr.unipi.ergasia.model.Environment;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +54,6 @@ public class EnvironmentManager {
 
             // Read and load the environment map from the file.
             try {
-                int width = 0;
                 int height = 0;
                 // For each row.
                 for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
@@ -67,6 +65,7 @@ public class EnvironmentManager {
                     String[] incredienceLine = line.split(" ");
 
                     // Read the columns of this row.
+                    int width = 0;
                     for (String incredienceItem : incredienceLine) {
                         // Get the item.
                         environment.setWidth(++width);

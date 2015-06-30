@@ -112,26 +112,26 @@ public class EnvironmentManagementController implements Initializable {
 
     @FXML
     void editRowClick(ActionEvent event) throws IOException {
-//        // Stages and owners.
-//        Stage currentStage = getStage();
-//        Stage editStage = new Stage();
-//        editStage.initModality(Modality.WINDOW_MODAL);
-//        editStage.initOwner(currentStage);
-//        editStage.setTitle("ΚΤΝ - Επεξεργασία Πλάνου Πράκτορα");
-//        editStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
-//
-//        // Load the view.
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/AgentPlanManagementEditView.fxml"));
-//        Parent root = (Parent) loader.load();
-//        editStage.setScene(new Scene(root));
-//        
-//        AgentPlanManagementEditController controller = (AgentPlanManagementEditController)loader.getController();        
-//        controller.setAgentPlan(tableView.getSelectionModel().selectedItemProperty().get());
-//        controller.setTableView(tableView);
-//        controller.loadData();
-//        
-//        /// Show it.
-//        editStage.show();
+        // Stages and owners.
+        Stage currentStage = getStage();
+        Stage editStage = new Stage();
+        editStage.initModality(Modality.WINDOW_MODAL);
+        editStage.initOwner(currentStage);
+        editStage.setTitle("ΚΤΝ - Επεξεργασία Περιβάλλοντος");
+        editStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
+
+        // Load the view.
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit/EnvironmentManagementEditView.fxml"));
+        Parent root = (Parent) loader.load();
+        editStage.setScene(new Scene(root));
+        
+        EnvironmentManagementEditController controller = (EnvironmentManagementEditController)loader.getController();        
+        controller.setEnvironment(tableView.getSelectionModel().selectedItemProperty().get());
+        controller.setTableView(tableView);
+        controller.loadData();
+        
+        /// Show it.
+        editStage.show();
     }
 
     @FXML

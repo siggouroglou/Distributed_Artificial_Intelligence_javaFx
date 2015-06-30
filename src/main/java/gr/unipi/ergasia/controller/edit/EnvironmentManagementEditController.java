@@ -1,11 +1,11 @@
 package gr.unipi.ergasia.controller.edit;
 
 import gr.unipi.ergasia.lib.manager.EnvironmentManager;
+import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.Environment;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,10 +38,11 @@ import org.apache.log4j.Logger;
  *
  * @author siggouroglou
  */
-public class EnvironmentManagementCreateController implements Initializable {
+public class EnvironmentManagementEditController implements Initializable {
 
     private final static Logger logger = Logger.getLogger(EnvironmentManagementCreateController.class);
-    private Environment environment = new Environment();
+    private Environment environment;
+    private TableView<Environment> tableView;
     @FXML
     private TextField titleTextField;
     @FXML
@@ -128,8 +130,52 @@ public class EnvironmentManagementCreateController implements Initializable {
         });
     }
 
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public void setTableView(TableView<Environment> tableView) {
+        this.tableView = tableView;
+    }
+
     private Stage getStage() {
         return (Stage) errorLabel.getScene().getWindow();
+    }
+
+    void loadData() {
+        // Set the text fields.
+        titleTextField.setText(environment.getTitle());
+        widthTextField.setText(String.valueOf(environment.getWidth()));
+        heightTextField.setText(String.valueOf(environment.getHeight()));
+
+        // Initialize the Grid.
+        resetGridClick(null);
+
+        // Fill the Grid with the correct images.
+        GridPane gridPane = (GridPane) containerGrid.getContent();
+        for (Node node : gridPane.getChildren()) {
+            if (node instanceof ImageView) {
+                ImageView imageView = (ImageView) node;
+
+                // Get the index of this child.
+                Integer row = GridPane.getRowIndex(node);
+                Integer column = GridPane.getColumnIndex(node);
+                if (column >= environment.getWidth() || row >= environment.getHeight()) {
+                    continue;
+                }
+
+                // For efficiency do not continue if this is an empty space.
+                StadiumIncredience incredience = environment.getStadium().get(row).get(column);
+                if (incredience.equals(StadiumIncredience.KENOS_XOROS)) {
+                    continue;
+                }
+
+                // Update the imageView.
+                imageView.setId(incredience.getVocabulary());
+                Image imageKeno = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" + incredience.getFileName()));
+                imageView.setImage(imageKeno);
+            }
+        }
     }
 
     @FXML
@@ -252,6 +298,7 @@ public class EnvironmentManagementCreateController implements Initializable {
 
     @FXML
     void cancelClick(ActionEvent event) {
+        tableView = null;
         getStage().close();
     }
 
@@ -303,10 +350,14 @@ public class EnvironmentManagementCreateController implements Initializable {
         environment.setTitle(titleTextField.getText());
         environment.setAgentCount(agentCount);
 
-        // Save this environment to the manager.
-        EnvironmentManager.getInstance().getEnvironmentList().add(environment);
+        // Refresh the table data. THere is a bug for auto refresing.
+        ObservableList<Environment> items = tableView.getItems();
+        List itemList = new ArrayList<>(items);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(itemList);
 
         // Close the stage.
+        tableView = null;
         getStage().close();
     }
 

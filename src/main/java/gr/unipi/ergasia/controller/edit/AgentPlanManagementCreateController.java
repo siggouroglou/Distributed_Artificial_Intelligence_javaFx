@@ -4,8 +4,6 @@ import gr.unipi.ergasia.lib.manager.AgentPlanManager;
 import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
