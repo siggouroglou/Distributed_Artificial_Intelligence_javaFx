@@ -8,6 +8,7 @@ import java.util.List;
  * @author siggouroglou@gmail.com
  */
 public class Environment {
+
     private String title;
     private int width;
     private int height;
@@ -60,5 +61,20 @@ public class Environment {
 
     public void setStadium(List<List<StadiumIncredience>> stadium) {
         this.stadium = stadium;
+    }
+
+    public List<StadiumIncredience> getBuildings() {
+        List<StadiumIncredience> environmentBuildingList = new LinkedList<>();
+
+        // For each element of this stadium.
+        for (List<StadiumIncredience> rowList : stadium) {
+            for (StadiumIncredience incredience : rowList) {
+                if (incredience.isBuilding()) {
+                    environmentBuildingList.add(incredience);
+                }
+            }
+        }
+
+        return environmentBuildingList;
     }
 }

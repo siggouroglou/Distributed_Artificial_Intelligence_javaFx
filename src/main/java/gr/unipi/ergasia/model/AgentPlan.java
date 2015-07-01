@@ -9,6 +9,7 @@ import java.util.Objects;
  * @author siggouroglou@gmail.com
  */
 public class AgentPlan {
+
     private String title;
     private List<StadiumIncredience> actionList;
 
@@ -33,6 +34,28 @@ public class AgentPlan {
         this.actionList = actionList;
     }
 
+    public boolean containsIncredience(List<StadiumIncredience> environmentBuildingList) {
+        boolean isExisting = false;
+
+        // Loop through the actions of this plan.
+        for (StadiumIncredience action : actionList) {
+            // Check if this incredience is existing in the plan.
+            isExisting = false;
+            for (StadiumIncredience incredience : environmentBuildingList) {
+                if (incredience.equals(action)) {
+                    isExisting = true;
+                    break;
+                }
+            }
+            // In case of this incredience is not contained in the plan.
+            if (!isExisting) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -53,5 +76,10 @@ public class AgentPlan {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }
