@@ -4,6 +4,8 @@ import gr.unipi.ergasia.controller.edit.AgentPlanManagementController;
 import gr.unipi.ergasia.controller.edit.EnvironmentManagementController;
 import gr.unipi.ergasia.controller.file.ScenarionInitController;
 import gr.unipi.ergasia.controller.help.AboutController;
+import gr.unipi.ergasia.lib.manager.GameManager;
+import gr.unipi.ergasia.service.Scenario;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,48 +30,61 @@ import javafx.stage.StageStyle;
  */
 public class MainViewController implements Initializable {
 
+    
     @FXML
-    private Label environmentDimensionsLabel;
-
+    Label environmentTitleLabel;
     @FXML
-    private Label environmentTitleLabel;
+    Label environmentAgentCountLabel;
+    @FXML
+    Label environmentDimensionsLabel;
+    @FXML
+    Label environmentBuildingTotalLabel;
+    @FXML
+    Label durationSecondsLabel;
+    @FXML
+    Label agentKnowledgeExchangelabel;
 
     @FXML
     private Button scenarioStartButton;
-
     @FXML
     private Button scenarioReStartButton;
-
     @FXML
     private ScrollPane containerNode;
-
-    @FXML
-    private Label environmentAgentCountLabel;
-
-    @FXML
-    private Label environmentBuildingTotalLabel;
-
     @FXML
     private Button scenarioPauseButton;
-
     @FXML
     private Button scenarioStopButton;
+    
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        assert environmentDimensionsLabel != null : "fx:id=\"environmentDimensionsLabel\" was not injected: check your FXML file 'MainView.fxml'.";
         assert environmentTitleLabel != null : "fx:id=\"environmentTitleLabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert environmentAgentCountLabel != null : "fx:id=\"environmentAgentCountLabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert environmentDimensionsLabel != null : "fx:id=\"environmentDimensionsLabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert environmentBuildingTotalLabel != null : "fx:id=\"environmentBuildingTotalLabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert durationSecondsLabel != null : "fx:id=\"durationSecondsLabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert agentKnowledgeExchangelabel != null : "fx:id=\"agentKnowledgeExchangelabel\" was not injected: check your FXML file 'MainView.fxml'.";
+        
         assert scenarioStartButton != null : "fx:id=\"scenarioStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioReStartButton != null : "fx:id=\"scenarioReStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert containerNode != null : "fx:id=\"containerNode\" was not injected: check your FXML file 'MainView.fxml'.";
-        assert environmentAgentCountLabel != null : "fx:id=\"environmentAgentCountLabel\" was not injected: check your FXML file 'MainView.fxml'.";
-        assert environmentBuildingTotalLabel != null : "fx:id=\"environmentBuildingTotalLabel\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioPauseButton != null : "fx:id=\"scenarioPauseButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioStopButton != null : "fx:id=\"scenarioStopButton\" was not injected: check your FXML file 'MainView.fxml'.";
 
+        // Set the correct nodes to the Game Manager.
+        GameManager gameManager = GameManager.getInstance();
+        gameManager.setContainerNode(containerNode);
+        gameManager.setEnvironmentTitleLabel(environmentTitleLabel);
+        gameManager.setEnvironmentAgentCountLabel(environmentAgentCountLabel);
+        gameManager.setEnvironmentDimensionsLabel(environmentDimensionsLabel);
+        gameManager.setEnvironmentBuildingTotalLabel(environmentBuildingTotalLabel);
+        gameManager.setDurationSecondsLabel(durationSecondsLabel);
+        gameManager.setAgentKnowledgeExchangelabel(agentKnowledgeExchangelabel);
+        
+        // Bindings for play/pause/stop/restart buttons and menu items.
     }
 
     private Stage getStage() {
@@ -84,7 +99,6 @@ public class MainViewController implements Initializable {
         Stage currentStage = getStage();
         Stage scenarioInitStage = new Stage();
         scenarioInitStage.initModality(Modality.WINDOW_MODAL);
-//        scenarioInitStage.setResizable(false);
         scenarioInitStage.initOwner(currentStage);
         scenarioInitStage.setTitle("ΚΤΝ - Διαχείριση Περιβάλλοντος");
         scenarioInitStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
@@ -214,22 +228,34 @@ public class MainViewController implements Initializable {
     //</editor-fold>
     @FXML
     void scenarioReStartClick(ActionEvent event) {
-
+        Scenario scenario = GameManager.getInstance().getScenario();
+        if(scenario != null) {
+            scenario.restart();
+        }
     }
 
     @FXML
     void scenarioStartClick(ActionEvent event) {
-
+        Scenario scenario = GameManager.getInstance().getScenario();
+        if(scenario != null) {
+            scenario.play();
+        }
     }
 
     @FXML
     void scenarioPauseClick(ActionEvent event) {
-
+        Scenario scenario = GameManager.getInstance().getScenario();
+        if(scenario != null) {
+            scenario.pause();
+        }
     }
 
     @FXML
     void scenarioStopClick(ActionEvent event) {
-
+        Scenario scenario = GameManager.getInstance().getScenario();
+        if(scenario != null) {
+            scenario.stopPlaying();
+        }
     }
 
 }

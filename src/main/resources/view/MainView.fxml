@@ -11,7 +11,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="gr.unipi.ergasia.controller.MainViewController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gr.unipi.ergasia.controller.MainViewController">
     <stylesheets>
         <URL value="@/files/css/commons.css" />
         <URL value="@/files/css/mainscene.css" />
@@ -126,13 +126,13 @@
                            </BorderPane.margin>
                            <children>
                               <Label text="Διαρκεια:" wrapText="true" />
-                              <Label text="Label" />
+                              <Label fx:id="durationSecondsLabel" text="Label" />
                            </children>
                         </FlowPane>
                         <FlowPane hgap="5.0" layoutX="10.0" layoutY="10.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0">
                            <children>
                               <Label text="Ανταλ.Γνωσης:" />
-                              <Label text="Label" wrapText="true" />
+                              <Label fx:id="agentKnowledgeExchangelabel" text="Label" wrapText="true" />
                            </children>
                         </FlowPane>
                      </children>

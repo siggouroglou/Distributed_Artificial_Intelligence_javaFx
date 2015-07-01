@@ -2,10 +2,15 @@ package gr.unipi.ergasia.controller.file;
 
 import gr.unipi.ergasia.lib.manager.AgentPlanManager;
 import gr.unipi.ergasia.lib.manager.EnvironmentManager;
+import gr.unipi.ergasia.lib.manager.GameManager;
 import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.Environment;
+import gr.unipi.ergasia.model.Point;
 import gr.unipi.ergasia.model.StadiumIncredience;
+import gr.unipi.ergasia.service.Agent;
+import gr.unipi.ergasia.service.Scenario;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -19,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -42,6 +48,7 @@ import org.controlsfx.dialog.Dialogs;
  */
 public class ScenarionInitController implements Initializable {
 
+    private Environment environment;
     @FXML
     private GridPane gridPane;
     @FXML
@@ -98,7 +105,7 @@ public class ScenarionInitController implements Initializable {
         tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
-    private void initializeAgentPlanList(Environment environment, List<AgentPlan> validAgentPlanList) {
+    private void initializeAgentPlanList(List<AgentPlan> validAgentPlanList) {
         // Empty the container.
         if (containerNode.getChildren() != null && !containerNode.getChildren().isEmpty()) {
             containerNode.getChildren().clear();
@@ -132,7 +139,7 @@ public class ScenarionInitController implements Initializable {
     @FXML
     void continueToStep2Click(ActionEvent event) {
         // Get the selected environment.
-        Environment environment = tableView.getSelectionModel().getSelectedItem();
+        environment = tableView.getSelectionModel().getSelectedItem();
 
         // Get the stadium incredience that includes this environment.
         List<StadiumIncredience> environmentBuildingList = environment.getBuildings();
@@ -168,7 +175,7 @@ public class ScenarionInitController implements Initializable {
         }
 
         // Initialize the agent plan selection.
-        initializeAgentPlanList(environment, validAgentPlanList);
+        initializeAgentPlanList(validAgentPlanList);
 
         // Timeline animation.
         final Timeline timeline = new Timeline();
@@ -202,16 +209,70 @@ public class ScenarionInitController implements Initializable {
 
     @FXML
     void completeClick(ActionEvent event) {
-        // Validation - title existance.
-        if (scenarioTitleTextField.getText().isEmpty()) {
+        // Get the plan from all the agent hboxes.
+        List<AgentPlan> agentPlanList = new ArrayList<>(environment.getAgentCount());
+        for (Node node : containerNode.getChildren()) {
+            if (node instanceof HBox) {
+                HBox hBox = (HBox) node;
+                for (Node child : hBox.getChildren()) {
+                    if (child instanceof ComboBox) {
+                        // Initialize variables.
+                        ComboBox<AgentPlan> comboBox = (ComboBox<AgentPlan>) child;
+                        AgentPlan agentPlan = comboBox.getSelectionModel().getSelectedItem();
+
+                        // Validate in case that an agent is not having plan.
+                        if (agentPlan == null) {
+                            Dialogs.create()
+                                    .owner(getStage())
+                                    .title("Πρόβλημα")
+                                    .masthead(null)
+                                    .message("Θα πρέπει να επιλέξετε πλάνο για όλους τους πράκτορες.")
+                                    .showError();
+                            return;
+                        }
+
+                        // Add this plan to the list.
+                        agentPlanList.add(agentPlan);
+                    }
+                }
+            }
+        }
+
+        // Get a list of the agent houses.
+        List<Point> startLocationList = environment.getPointsOfItem(StadiumIncredience.SPITI_AGENT);
+
+        // Validation - agent plan count must be the same with start location count.
+        if (agentPlanList.size() != startLocationList.size()) {
             Dialogs.create()
                     .owner(getStage())
                     .title("Πρόβλημα")
                     .masthead(null)
-                    .message("Δεν έχετε επιλέξει τίτλο.")
+                    .message("Ένα πρόβλημα προέκυψε κατά τη κατασκευή των πρακτόρων.")
                     .showError();
-            return;
         }
+
+        // Create the scenario.
+        Scenario scenario = new Scenario.ScenarioBuilder()
+                .environment(environment)
+                .build();
+
+        // Create the agents.
+        int index = 0;
+        List<Agent> agentList = new ArrayList<Agent>(environment.getAgentCount());
+        for (AgentPlan agentPlan : agentPlanList) {
+            Agent agent = new Agent(index, scenario, agentPlan, startLocationList.get(index));
+            agentList.add(agent);
+            index++;
+        }
+
+        // Add them to the Game manager.
+        GameManager gameManager = GameManager.getInstance();
+        gameManager.setScenario(scenario);
+        gameManager.setAgentList(agentList);
+        gameManager.initializeGame();
+        
+        // Close this stage.
+        getStage().close();
     }
 
 }

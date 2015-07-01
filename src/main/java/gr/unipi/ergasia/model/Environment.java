@@ -1,5 +1,6 @@
 package gr.unipi.ergasia.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,5 +77,22 @@ public class Environment {
         }
 
         return environmentBuildingList;
+    }
+
+    public List<Point> getPointsOfItem(StadiumIncredience stadiumIncredience) {
+        final List<Point> pointOfItemList = new ArrayList<>();
+
+        // Scan the stadium and capture the location of this incredience.
+        int row = 0;
+        for (List<StadiumIncredience> rowList : stadium) {
+            int col = 0;
+            for (StadiumIncredience incredience : rowList) {
+                if (incredience.equals(stadiumIncredience)) {
+                    pointOfItemList.add(new Point(col, row));
+                }
+            }
+        }
+
+        return pointOfItemList;
     }
 }
