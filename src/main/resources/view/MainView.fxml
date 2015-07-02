@@ -28,22 +28,22 @@
                               <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                    <MenuItem mnemonicParsing="false" onAction="#fileScenarioStartClick" text="Εναρξη Σεναριου">
+                    <MenuItem fx:id="fileScenarioStartMenu" mnemonicParsing="false" onAction="#fileScenarioStartClick" text="Εναρξη Σεναριου">
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#fileScenarioRestartClick" text="Επανεκινηση Σεναριου">
+                        <MenuItem fx:id="fileScenarioReStartMenu" mnemonicParsing="false" onAction="#fileScenarioRestartClick" text="Επανεκινηση Σεναριου">
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="R" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#fileScenarioPauseClick" text="Παυση Σεναριου">
+                        <MenuItem fx:id="fileScenarioPauseMenu" mnemonicParsing="false" onAction="#fileScenarioPauseClick" text="Παυση Σεναριου">
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="P" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
                         </MenuItem>
-                        <MenuItem mnemonicParsing="false" onAction="#fileScenarioStopClick" text="Διακοπη Σεναριου">
+                        <MenuItem fx:id="fileScenarioStopMenu" mnemonicParsing="false" onAction="#fileScenarioStopClick" text="Διακοπη Σεναριου">
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>

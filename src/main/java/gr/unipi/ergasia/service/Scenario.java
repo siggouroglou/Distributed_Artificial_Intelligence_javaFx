@@ -1,10 +1,9 @@
 package gr.unipi.ergasia.service;
 
 import gr.unipi.ergasia.model.Environment;
-import java.util.LinkedList;
-import java.util.List;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
+import gr.unipi.ergasia.model.ScenarioState;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  *
@@ -13,11 +12,29 @@ import javafx.scene.control.Label;
 public class Scenario extends Thread {
 
     private Environment environment;
+    private ObjectProperty<ScenarioState> scenarioStateProperty;
     private int durationSeconds;
 
     private Scenario(ScenarioBuilder builder) {
         this.environment = builder.environment;
+        this.scenarioStateProperty = new SimpleObjectProperty<>(ScenarioState.NOT_READY);
         this.durationSeconds = builder.durationSeconds;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+    
+    public ObjectProperty<ScenarioState> scenarioStateProperty(){
+        return scenarioStateProperty;
+    }
+
+    public ScenarioState getScenarioState() {
+        return scenarioStateProperty.get();
+    }
+
+    public void setScenarioState(ScenarioState scenarioState) {
+        this.scenarioStateProperty.set(scenarioState);
     }
     
     @Override

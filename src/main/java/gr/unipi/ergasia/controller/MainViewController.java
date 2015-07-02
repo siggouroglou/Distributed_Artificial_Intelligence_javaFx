@@ -5,10 +5,14 @@ import gr.unipi.ergasia.controller.edit.EnvironmentManagementController;
 import gr.unipi.ergasia.controller.file.ScenarionInitController;
 import gr.unipi.ergasia.controller.help.AboutController;
 import gr.unipi.ergasia.lib.manager.GameManager;
+import gr.unipi.ergasia.model.ScenarioState;
 import gr.unipi.ergasia.service.Scenario;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +21,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -45,15 +50,24 @@ public class MainViewController implements Initializable {
     Label agentKnowledgeExchangelabel;
 
     @FXML
+    private ScrollPane containerNode;
+    @FXML
     private Button scenarioStartButton;
     @FXML
     private Button scenarioReStartButton;
     @FXML
-    private ScrollPane containerNode;
-    @FXML
     private Button scenarioPauseButton;
     @FXML
     private Button scenarioStopButton;
+    
+    @FXML
+    private MenuItem fileScenarioStartMenu;
+    @FXML
+    private MenuItem fileScenarioReStartMenu;
+    @FXML
+    private MenuItem fileScenarioPauseMenu;
+    @FXML
+    private MenuItem fileScenarioStopMenu;
     
 
     /**
@@ -68,11 +82,16 @@ public class MainViewController implements Initializable {
         assert durationSecondsLabel != null : "fx:id=\"durationSecondsLabel\" was not injected: check your FXML file 'MainView.fxml'.";
         assert agentKnowledgeExchangelabel != null : "fx:id=\"agentKnowledgeExchangelabel\" was not injected: check your FXML file 'MainView.fxml'.";
         
+        assert containerNode != null : "fx:id=\"containerNode\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioStartButton != null : "fx:id=\"scenarioStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioReStartButton != null : "fx:id=\"scenarioReStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
-        assert containerNode != null : "fx:id=\"containerNode\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioPauseButton != null : "fx:id=\"scenarioPauseButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioStopButton != null : "fx:id=\"scenarioStopButton\" was not injected: check your FXML file 'MainView.fxml'.";
+        
+        assert fileScenarioStartMenu != null : "fx:id=\"fileScenarioStartMenu\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert fileScenarioReStartMenu != null : "fx:id=\"fileScenarioReStartMenu\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert fileScenarioPauseMenu != null : "fx:id=\"fileScenarioPauseMenu\" was not injected: check your FXML file 'MainView.fxml'.";
+        assert fileScenarioStopMenu != null : "fx:id=\"fileScenarioStopMenu\" was not injected: check your FXML file 'MainView.fxml'.";
 
         // Set the correct nodes to the Game Manager.
         GameManager gameManager = GameManager.getInstance();
@@ -84,7 +103,17 @@ public class MainViewController implements Initializable {
         gameManager.setDurationSecondsLabel(durationSecondsLabel);
         gameManager.setAgentKnowledgeExchangelabel(agentKnowledgeExchangelabel);
         
-        // Bindings for play/pause/stop/restart buttons and menu items.
+        gameManager.setScenarioStartButton(scenarioStartButton);
+        gameManager.setScenarioReStartButton(scenarioReStartButton);
+        gameManager.setScenarioPauseButton(scenarioPauseButton);
+        gameManager.setScenarioStopButton(scenarioStopButton);
+        gameManager.setFileScenarioStartMenu(fileScenarioStartMenu);
+        gameManager.setFileScenarioReStartMenu(fileScenarioReStartMenu);
+        gameManager.setFileScenarioPauseMenu(fileScenarioPauseMenu);
+        gameManager.setFileScenarioStopMenu(fileScenarioStopMenu);
+        
+        gameManager.buttonBinding();
+        
     }
 
     private Stage getStage() {
@@ -226,6 +255,7 @@ public class MainViewController implements Initializable {
     }
 
     //</editor-fold>
+    
     @FXML
     void scenarioReStartClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();

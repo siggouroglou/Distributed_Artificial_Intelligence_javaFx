@@ -88,9 +88,10 @@ public class Environment {
             int col = 0;
             for (StadiumIncredience incredience : rowList) {
                 if (incredience.equals(stadiumIncredience)) {
-                    pointOfItemList.add(new Point(col, row));
+                    pointOfItemList.add(new Point(col++, row));
                 }
             }
+            row++;
         }
 
         return pointOfItemList;

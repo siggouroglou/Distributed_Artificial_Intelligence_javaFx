@@ -6,6 +6,7 @@ import gr.unipi.ergasia.lib.manager.GameManager;
 import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.Environment;
 import gr.unipi.ergasia.model.Point;
+import gr.unipi.ergasia.model.ScenarioState;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import gr.unipi.ergasia.service.Agent;
 import gr.unipi.ergasia.service.Scenario;
@@ -255,6 +256,7 @@ public class ScenarionInitController implements Initializable {
         Scenario scenario = new Scenario.ScenarioBuilder()
                 .environment(environment)
                 .build();
+        scenario.setScenarioState(ScenarioState.READY);
 
         // Create the agents.
         int index = 0;
