@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -250,6 +248,7 @@ public class MainViewController implements Initializable {
     }
 
     //</editor-fold>
+    
     @FXML
     void scenarioReStartClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();

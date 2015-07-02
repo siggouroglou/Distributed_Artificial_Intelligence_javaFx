@@ -28,6 +28,7 @@ public class GameManager {
 
     private final static Logger logger = Logger.getLogger(GameManager.class);
     private static GameManager INSTANCE;
+    private GridPane gridPane;
     private ObjectProperty<Scenario> scenarioProperty;
     private List<Agent> agentList;
     private ScrollPane containerNode;
@@ -48,6 +49,7 @@ public class GameManager {
     private MenuItem fileScenarioStopMenu;
 
     public GameManager() {
+        this.gridPane = null;
         this.scenarioProperty = new SimpleObjectProperty<>(new Scenario.ScenarioBuilder().build()); // Initialize the scenario for the button Binding. NOT_READY state.
         this.agentList = null;
         this.containerNode = null;
@@ -75,6 +77,10 @@ public class GameManager {
     }
 
     //<editor-fold defaultstate="collapsed" desc="Getters-Setters">
+    public GridPane getGridPane() {
+        return gridPane;
+    }
+
     public ObjectProperty<Scenario> scenarioProperty() {
         return this.scenarioProperty;
     }
@@ -258,7 +264,7 @@ public class GameManager {
 
         // Initialize the Grid.
         containerNode.setContent(null);
-        GridPane gridPane = new GridPane();
+        gridPane = new GridPane();
         gridPane.gridLinesVisibleProperty().set(true);
         int row = 0;
         for (List<StadiumIncredience> rowList : environment.getStadium()) {

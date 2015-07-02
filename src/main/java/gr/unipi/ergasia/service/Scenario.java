@@ -54,6 +54,7 @@ public class Scenario extends Task<Object> {
 
             if (getScenarioState() == ScenarioState.RUNNING) {
                 // Check if all agent are completed.
+                logger.debug("Scenar - Check if all agent are completed.");
                 int agentCompleted = 0;
                 for (Agent agent : GameManager.getInstance().getAgentList()) {
                     if (agent.isDone()) {
@@ -66,6 +67,7 @@ public class Scenario extends Task<Object> {
                 }
 
                 // Update the duration seconds.
+                logger.debug("Scenar - Update the duration seconds to " + durationSeconds + ".");
                 durationSeconds++;
 
                 // Update the label.

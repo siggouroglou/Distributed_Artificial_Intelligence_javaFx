@@ -1,23 +1,25 @@
-package gr.unipi.ergasia.model;
+package gr.unipi.ergasia.lib.knowledge;
 
+import gr.unipi.ergasia.model.Point;
+import gr.unipi.ergasia.model.StadiumIncredience;
+import java.util.List;
 import java.util.Objects;
 
 /**
  *
  * @author siggouroglou@gmail.com
  */
-public class AgentKnowledge {
+public class KnowledgeNode {
     private Point point;
     private StadiumIncredience stadiumIncredience;
+    private List<StadiumIncredience> neightborList; // Maximum 4 items.
+    private int visitedTimes;
 
-    public AgentKnowledge() {
+    public KnowledgeNode() {
         this.point = null;
         this.stadiumIncredience = null;
-    }
-
-    public AgentKnowledge(Point point, StadiumIncredience stadiumIncredience) {
-        this.point = point;
-        this.stadiumIncredience = stadiumIncredience;
+        this.neightborList = null;
+        this.visitedTimes = 0;
     }
 
     public Point getPoint() {
@@ -36,10 +38,26 @@ public class AgentKnowledge {
         this.stadiumIncredience = stadiumIncredience;
     }
 
+    public List<StadiumIncredience> getNeightborList() {
+        return neightborList;
+    }
+
+    public void setNeightborList(List<StadiumIncredience> neightborList) {
+        this.neightborList = neightborList;
+    }
+
+    public int getVisitedTimes() {
+        return visitedTimes;
+    }
+
+    public void setVisitedTimes(int visitedTimes) {
+        this.visitedTimes = visitedTimes;
+    }
+
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.point);
+        int hash = 5;
+        hash = 47 * hash + Objects.hashCode(this.point);
         return hash;
     }
 
@@ -51,7 +69,7 @@ public class AgentKnowledge {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AgentKnowledge other = (AgentKnowledge) obj;
+        final KnowledgeNode other = (KnowledgeNode) obj;
         if (!Objects.equals(this.point, other.point)) {
             return false;
         }
