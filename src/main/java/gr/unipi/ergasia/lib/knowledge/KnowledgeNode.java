@@ -2,6 +2,7 @@ package gr.unipi.ergasia.lib.knowledge;
 
 import gr.unipi.ergasia.model.Point;
 import gr.unipi.ergasia.model.StadiumIncredience;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ public class KnowledgeNode {
     public KnowledgeNode() {
         this.point = null;
         this.stadiumIncredience = null;
-        this.neightborList = null;
+        this.neightborList = new ArrayList<>(4);
         this.visitedTimes = 0;
     }
 

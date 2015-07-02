@@ -87,7 +87,7 @@
                         <FlowPane hgap="5.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0" BorderPane.alignment="CENTER">
                            <children>
                               <Label text="Πιστα:" />
-                              <Label fx:id="environmentTitleLabel" text="Label" wrapText="true" />
+                              <Label fx:id="environmentTitleLabel" wrapText="true" />
                            </children>
                            <BorderPane.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -96,19 +96,19 @@
                         <FlowPane hgap="5.0" layoutX="10.0" layoutY="10.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0">
                            <children>
                               <Label text="Πρακτορες:" />
-                              <Label fx:id="environmentAgentCountLabel" text="Label" wrapText="true" />
+                              <Label fx:id="environmentAgentCountLabel" wrapText="true" />
                            </children>
                         </FlowPane>
                         <FlowPane hgap="5.0" layoutX="10.0" layoutY="10.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0">
                            <children>
                               <Label text="Διασταση:" />
-                              <Label fx:id="environmentDimensionsLabel" text="Label" wrapText="true" />
+                              <Label fx:id="environmentDimensionsLabel" wrapText="true" />
                            </children>
                         </FlowPane>
                         <FlowPane hgap="5.0" layoutX="10.0" layoutY="40.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0">
                            <children>
                               <Label text="Κτιρια:" />
-                              <Label fx:id="environmentBuildingTotalLabel" text="Label" wrapText="true" />
+                              <Label fx:id="environmentBuildingTotalLabel" wrapText="true" />
                            </children>
                         </FlowPane>
                      </children>
@@ -126,13 +126,13 @@
                            </BorderPane.margin>
                            <children>
                               <Label text="Διαρκεια:" wrapText="true" />
-                              <Label fx:id="durationSecondsLabel" text="Label" />
+                              <Label fx:id="durationSecondsLabel" />
                            </children>
                         </FlowPane>
                         <FlowPane hgap="5.0" layoutX="10.0" layoutY="10.0" maxWidth="150.0" prefWidth="150.0" vgap="5.0">
                            <children>
                               <Label text="Ανταλ.Γνωσης:" />
-                              <Label fx:id="agentKnowledgeExchangelabel" text="Label" wrapText="true" />
+                              <Label fx:id="agentKnowledgeExchangelabel" wrapText="true" />
                            </children>
                         </FlowPane>
                      </children>
