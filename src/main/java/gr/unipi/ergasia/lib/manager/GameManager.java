@@ -17,6 +17,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import org.apache.log4j.Logger;
 
 /**
  * Singleton class that knows the current scenario and agent threads.
@@ -25,6 +26,7 @@ import javafx.scene.layout.GridPane;
  */
 public class GameManager {
 
+    private final static Logger logger = Logger.getLogger(GameManager.class);
     private static GameManager INSTANCE;
     private ObjectProperty<Scenario> scenarioProperty;
     private List<Agent> agentList;
@@ -221,7 +223,7 @@ public class GameManager {
         this.fileScenarioStopMenu = fileScenarioStopMenu;
     }
     //</editor-fold>
-    
+
     public void buttonBinding() {
         // Bindings for play/pause/stop/restart buttons and menu items.
         ObjectProperty<ScenarioState> scenarioStateProperty = GameManager.getInstance().scenarioProperty().get().scenarioStateProperty();
@@ -285,16 +287,20 @@ public class GameManager {
         environmentBuildingTotalLabel.setText(String.valueOf(environment.getBuildings().size()));
         durationSecondsLabel.setText("00:00:00");
         agentKnowledgeExchangelabel.setText("0");
-        
+
         // Update the binding.
         buttonBinding();
 
         // Start the agents.
         for (Agent agent : agentList) {
-            agent.start();
+            Thread agentThread = new Thread(agent);
+            agentThread.setDaemon(true);
+            agentThread.start();
         }
 
         // Start the scenario.
-        getScenario().start();
+        Thread scenarioThread = new Thread(getScenario());
+        scenarioThread.setDaemon(true);
+        scenarioThread.start();
     }
 }

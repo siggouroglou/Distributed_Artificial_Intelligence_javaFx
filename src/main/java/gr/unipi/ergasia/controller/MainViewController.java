@@ -2,18 +2,14 @@ package gr.unipi.ergasia.controller;
 
 import gr.unipi.ergasia.controller.edit.AgentPlanManagementController;
 import gr.unipi.ergasia.controller.edit.EnvironmentManagementController;
-import gr.unipi.ergasia.controller.file.ScenarionInitController;
 import gr.unipi.ergasia.controller.help.AboutController;
 import gr.unipi.ergasia.lib.manager.GameManager;
-import gr.unipi.ergasia.model.ScenarioState;
 import gr.unipi.ergasia.service.Scenario;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 /**
  * FXML Controller class
@@ -35,7 +32,6 @@ import javafx.stage.StageStyle;
  */
 public class MainViewController implements Initializable {
 
-    
     @FXML
     Label environmentTitleLabel;
     @FXML
@@ -59,7 +55,7 @@ public class MainViewController implements Initializable {
     private Button scenarioPauseButton;
     @FXML
     private Button scenarioStopButton;
-    
+
     @FXML
     private MenuItem fileScenarioStartMenu;
     @FXML
@@ -68,7 +64,6 @@ public class MainViewController implements Initializable {
     private MenuItem fileScenarioPauseMenu;
     @FXML
     private MenuItem fileScenarioStopMenu;
-    
 
     /**
      * Initializes the controller class.
@@ -81,13 +76,13 @@ public class MainViewController implements Initializable {
         assert environmentBuildingTotalLabel != null : "fx:id=\"environmentBuildingTotalLabel\" was not injected: check your FXML file 'MainView.fxml'.";
         assert durationSecondsLabel != null : "fx:id=\"durationSecondsLabel\" was not injected: check your FXML file 'MainView.fxml'.";
         assert agentKnowledgeExchangelabel != null : "fx:id=\"agentKnowledgeExchangelabel\" was not injected: check your FXML file 'MainView.fxml'.";
-        
+
         assert containerNode != null : "fx:id=\"containerNode\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioStartButton != null : "fx:id=\"scenarioStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioReStartButton != null : "fx:id=\"scenarioReStartButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioPauseButton != null : "fx:id=\"scenarioPauseButton\" was not injected: check your FXML file 'MainView.fxml'.";
         assert scenarioStopButton != null : "fx:id=\"scenarioStopButton\" was not injected: check your FXML file 'MainView.fxml'.";
-        
+
         assert fileScenarioStartMenu != null : "fx:id=\"fileScenarioStartMenu\" was not injected: check your FXML file 'MainView.fxml'.";
         assert fileScenarioReStartMenu != null : "fx:id=\"fileScenarioReStartMenu\" was not injected: check your FXML file 'MainView.fxml'.";
         assert fileScenarioPauseMenu != null : "fx:id=\"fileScenarioPauseMenu\" was not injected: check your FXML file 'MainView.fxml'.";
@@ -102,7 +97,7 @@ public class MainViewController implements Initializable {
         gameManager.setEnvironmentBuildingTotalLabel(environmentBuildingTotalLabel);
         gameManager.setDurationSecondsLabel(durationSecondsLabel);
         gameManager.setAgentKnowledgeExchangelabel(agentKnowledgeExchangelabel);
-        
+
         gameManager.setScenarioStartButton(scenarioStartButton);
         gameManager.setScenarioReStartButton(scenarioReStartButton);
         gameManager.setScenarioPauseButton(scenarioPauseButton);
@@ -111,7 +106,7 @@ public class MainViewController implements Initializable {
         gameManager.setFileScenarioReStartMenu(fileScenarioReStartMenu);
         gameManager.setFileScenarioPauseMenu(fileScenarioPauseMenu);
         gameManager.setFileScenarioStopMenu(fileScenarioStopMenu);
-        
+
         gameManager.buttonBinding();
         
     }
@@ -255,11 +250,10 @@ public class MainViewController implements Initializable {
     }
 
     //</editor-fold>
-    
     @FXML
     void scenarioReStartClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();
-        if(scenario != null) {
+        if (scenario != null) {
             scenario.restart();
         }
     }
@@ -267,7 +261,7 @@ public class MainViewController implements Initializable {
     @FXML
     void scenarioStartClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();
-        if(scenario != null) {
+        if (scenario != null) {
             scenario.play();
         }
     }
@@ -275,7 +269,7 @@ public class MainViewController implements Initializable {
     @FXML
     void scenarioPauseClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();
-        if(scenario != null) {
+        if (scenario != null) {
             scenario.pause();
         }
     }
@@ -283,7 +277,7 @@ public class MainViewController implements Initializable {
     @FXML
     void scenarioStopClick(ActionEvent event) {
         Scenario scenario = GameManager.getInstance().getScenario();
-        if(scenario != null) {
+        if (scenario != null) {
             scenario.stopPlaying();
         }
     }

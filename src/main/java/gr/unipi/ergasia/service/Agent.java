@@ -5,13 +5,16 @@ import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.Point;
 import java.util.LinkedList;
 import java.util.List;
+import javafx.concurrent.Task;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author siggouroglou@gmail.com
  */
-public class Agent extends Thread {
+public class Agent extends Task {
 
+    private final static Logger logger = Logger.getLogger(Agent.class);
     private int id;
     private Scenario scenario;
     private List<AgentKnowledge> placeKnowledge;
@@ -21,7 +24,6 @@ public class Agent extends Thread {
     private int agentKnowledgeExchangeCount;
 
     public Agent(int id, Scenario scenario, AgentPlan agentPlan, Point startLocation) {
-        super("Agent-" + id);
         this.id = id;
         this.scenario = scenario;
         this.placeKnowledge = new LinkedList<>();
@@ -36,8 +38,10 @@ public class Agent extends Thread {
     }
 
     @Override
-    public void start() {
-
+    protected Object call() throws Exception {
+        while (true) {
+            
+        }
     }
 
 //    private boolean isLocationKnown(Point point) {
