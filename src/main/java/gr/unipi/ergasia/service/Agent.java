@@ -6,6 +6,7 @@ import gr.unipi.ergasia.lib.knowledge.KnowledgeGraph;
 import gr.unipi.ergasia.lib.knowledge.KnowledgeNode;
 import gr.unipi.ergasia.lib.manager.GameManager;
 import gr.unipi.ergasia.model.AgentPlan;
+import gr.unipi.ergasia.model.Environment;
 import gr.unipi.ergasia.model.Point;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Random;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -27,22 +27,18 @@ import org.apache.log4j.Logger;
 public class Agent extends Task<Object> {
 
     private final static Logger logger = Logger.getLogger(Agent.class);
-    private int id;
-    private Scenario scenario;
-    private KnowledgeGraph knowledgeGraph;
-//    private List<AgentKnowledge> placeKnowledge;
+    private final int id;
+    private final Scenario scenario;
+    private final KnowledgeGraph knowledgeGraph;
     private AgentPlan agentPlan;
     private Point currentLocation;
     private int agentStepCount;
     private int agentKnowledgeExchangeCount;
     private int currentPlanTargetIndex;
-    private ImageView agentImage;
-    private ImageView overridenImage;
 
     public Agent(int id, Scenario scenario, AgentPlan agentPlan, Point startLocation) {
         this.id = id;
         this.scenario = scenario;
-//        this.placeKnowledge = new LinkedList<>();
         this.agentPlan = agentPlan;
         this.currentLocation = startLocation;
         this.agentStepCount = 0;
@@ -54,17 +50,6 @@ public class Agent extends Task<Object> {
         rootNode.setPoint(startLocation);
         rootNode.setStadiumIncredience(StadiumIncredience.SPITI_AGENT);
         this.knowledgeGraph = new KnowledgeGraph();
-
-        // Images.
-        Image image = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" + StadiumIncredience.AGENT.getFileName()));
-        ImageView imageView = new ImageView(image);
-        imageView.setId(StadiumIncredience.AGENT.getVocabulary());
-        imageView.setFitWidth(40);
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-        imageView.setCache(true);
-        this.agentImage = imageView;
-        this.overridenImage = null;
     }
 
     public Point getCurrentLocation() {
@@ -77,17 +62,20 @@ public class Agent extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
+        // Point objects that store the old and the next location.
+        Point oldLocation = currentLocation;
+        Point nextLocation = currentLocation;
+
         try {
-            Point oldLocation = currentLocation;
-            Point nextLocation = currentLocation;
+            // Loop till the agent complete his plan.
+            boolean isPlanCompleted = false;
+            boolean isAgentFinished = false;
             while (true) {
                 // Check if agent has completed with the plan.
                 if (currentPlanTargetIndex == agentPlan.getActionList().size()) {
-                    logger.debug("Agent" + id + " - I completed my plan.");
-                // Go to home..
-
-                    // Complete with the agent thread.
-                    break;
+                    logger.debug("Agent" + id + " - I completed my plan. Lets go home.");
+                    isPlanCompleted = true;
+                    letsGoHome();
                 }
 
                 // Get the new location from the knowledgeGraph base.
@@ -113,17 +101,20 @@ public class Agent extends Task<Object> {
                 // Check if i arrived to my plan.
                 StadiumIncredience targetIncredience = agentPlan.getActionList().get(currentPlanTargetIndex);
                 if (isLocationNeightborEqualTo(currentLocation, targetIncredience)) {
-                    logger.debug("Agent" + id + " - I arrived to my plan and i target to next plan now.");
+                    if (isPlanCompleted) {
+                        isAgentFinished = true;
+                    }
+                    logger.debug("Agent" + id + " - I arrived to my plan and i will target to next plan now.");
                     currentPlanTargetIndex++;
                 }
 
                 // Check if i know the location of the target point of my plan.
                 KnowledgeNode targetNode = knowledgeGraph.findByIncredience(targetIncredience);
                 if (targetNode != null) {
-                    logger.debug("Agent" + id + " - I know it so get the newarest point to move to.");
-                    nextLocation = getNextNearestPoint(knowledgeNode, targetNode);
+                    logger.debug("Agent" + id + " - I know the current location" + currentLocation + " so find the nearest point to move to.");
+                    nextLocation = getNextNearestPoint(targetNode, knowledgeNode);
                 } else {
-                    logger.debug("Agent" + id + " - I do not know it so go to next less known point.");
+                    logger.debug("Agent" + id + " - I do not know the current location" + currentLocation + " so go to next less known point.");
                     nextLocation = getNextPoint(currentLocation);
                 }
 
@@ -133,55 +124,34 @@ public class Agent extends Task<Object> {
                 currentLocation = nextLocation;
 
                 // Sleep for some time to allow the other agents to work.
-                Random random = new Random();
-                int sleepTime = 500 + random.nextInt(1500);
-                logger.debug("Agent" + id + " - Sleeping for " + sleepTime + "ms.");
-                Thread.sleep(sleepTime);
+                sleepAgent();
             }
         } catch (Exception ex) {
+            logger.error(ex);
             ex.printStackTrace();
         }
         return null;
     }
 
     private KnowledgeNode addKnowledge(Point pointOld, Point pointNew) {
-        // Get the points i am interesting in.
-        Point[] pointArray = new Point[]{
-            new Point(pointNew.getX(), pointNew.getY() - 1),
-            new Point(pointNew.getX() + 1, pointNew.getY()),
-            new Point(pointNew.getX(), pointNew.getY() + 1),
-            new Point(pointNew.getX() - 1, pointNew.getY())
-        };
-
         // The knowledgeGraph that will be created.
         KnowledgeNode knowledgeNode = new KnowledgeNode();
         knowledgeNode.setPoint(pointNew);
         knowledgeNode.setVisitedTimes(1);
 
-        // Scan the grid and find what is hiding in this points. Add the new places in the neighborwood of this point.
-        GridPane gridPane = GameManager.getInstance().getGridPane();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof ImageView) {
-                ImageView imageView = (ImageView) node;
-
-                // Get the Point of this node.
-                Integer row = GridPane.getRowIndex(node);
-                Integer column = GridPane.getColumnIndex(node);
-                Point gridLocation = new Point(column, row);
-
-                // Check if this point is the center of this knowledgeGraph.
-                if (pointNew.equals(gridLocation)) {
-                    knowledgeNode.setStadiumIncredience(StadiumIncredience.initFromVocabulary(imageView.getId()));
-                    continue;
-                }
-
-                // Check if this point is equal with the up/right/down/left and save the loation to the knowledgeGraph data structure.
-                for (Point current : pointArray) {
-                    if (current.equals(gridLocation)) {
-                        knowledgeNode.getNeightborList().add(StadiumIncredience.initFromVocabulary(imageView.getId()));
-                        break;
-                    }
-                }
+        // Add the new places of this point and its neighborwood.
+        Environment environment = scenario.getEnvironment();
+        knowledgeNode.setStadiumIncredience(environment.getStadiumIncredienceOfPoint(pointNew));
+        Point[] pointToSearchArray = new Point[]{
+            new Point(pointNew.getX(), pointNew.getY() - 1),
+            new Point(pointNew.getX() + 1, pointNew.getY()),
+            new Point(pointNew.getX(), pointNew.getY() + 1),
+            new Point(pointNew.getX() - 1, pointNew.getY())
+        };
+        for (Point point : pointToSearchArray) {
+            StadiumIncredience stadiumIncredienceOfPoint = environment.getStadiumIncredienceOfPoint(point);
+            if (stadiumIncredienceOfPoint != null) {
+                knowledgeNode.getNeightborList().add(stadiumIncredienceOfPoint);
             }
         }
 
@@ -231,9 +201,19 @@ public class Agent extends Task<Object> {
         // Get this agents' knowledgeGraph data structure.
         KnowledgeGraph agentKnowledge = agent.getKnowledgeGraph();
 
-        // Merge it with the current agent's knowledgeGraph data structure.
-        knowledgeGraph.getNodeSet().addAll(agentKnowledge.getNodeSet());
-        knowledgeGraph.getLineSet().addAll(agentKnowledge.getLineSet());
+        // Clone collection of nodes to change the visited times.
+        List<KnowledgeNode> cloneNodeList = new ArrayList<>(agentKnowledge.getNodeSet().size());
+        for (KnowledgeNode item : agentKnowledge.getNodeSet()) {
+            cloneNodeList.add(new KnowledgeNode(item));
+        }
+        List<GraphLine> cloneLineList = new ArrayList<>(agentKnowledge.getLineSet().size());
+        for (GraphLine item : agentKnowledge.getLineSet()) {
+            cloneLineList.add(new GraphLine(item));
+        }
+
+        // Merge it with the current agent's knowledgeGraph data structure. Using HashSet duplicates are not inserted.
+        knowledgeGraph.getNodeSet().addAll(cloneNodeList);
+        knowledgeGraph.getLineSet().addAll(cloneLineList);
     }
 
     private boolean isLocationNeightborEqualTo(Point point, StadiumIncredience incredience) {
@@ -256,10 +236,17 @@ public class Agent extends Task<Object> {
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(knowledgeGraph);
         dijkstra.execute(sourceNode);
         LinkedList<KnowledgeNode> path = dijkstra.getPath(destinationNode);
-        return path.get(0).getPoint();
+
+        // Check the case where the first plan is next to agents house.
+        if (path == null) {
+            return getNextPoint(destinationNode.getPoint());
+        }
+
+        // Return the last-1 point. The last point is the current location.
+        return path.get(path.size() > 1 ? path.size() - 2 : 0).getPoint();
     }
 
-    private Point getNextPoint(Point point) {
+    private synchronized Point getNextPoint(Point point) {
         // Get the points i am interesting in.
         Point[] pointToSearchArray = new Point[]{
             new Point(point.getX(), point.getY() - 1),
@@ -272,26 +259,11 @@ public class Agent extends Task<Object> {
         List<Point> roadNodeList = new ArrayList<>(4);
 
         // Get only the roads from this points.
-        GridPane gridPane = GameManager.getInstance().getGridPane();
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof ImageView) {
-                ImageView imageView = (ImageView) node;
-
-                // Get the index of this child.
-                Integer row = GridPane.getRowIndex(node);
-                Integer column = GridPane.getColumnIndex(node);
-                Point gridLocation = new Point(column, row);
-
-                // Check for each point.
-                for (Point currentPoint : pointToSearchArray) {
-                    if (currentPoint.equals(gridLocation)) {
-                        StadiumIncredience incredience = StadiumIncredience.initFromVocabulary(imageView.getId());
-                        if (StadiumIncredience.getAllRoads().contains(incredience)) {
-                            roadNodeList.add(currentPoint);
-                        }
-                        break;
-                    }
-                }
+        Environment environment = scenario.getEnvironment();
+        for (Point current : pointToSearchArray) {
+            StadiumIncredience stadiumIncredienceOfPoint = environment.getStadiumIncredienceOfPoint(current);
+            if (stadiumIncredienceOfPoint != null && StadiumIncredience.getAllRoads().contains(stadiumIncredienceOfPoint)) {
+                roadNodeList.add(current);
             }
         }
 
@@ -321,60 +293,50 @@ public class Agent extends Task<Object> {
     }
 
     private void moveToPoint(final Point pointOld, final Point pointNew) {
-        // Get the grid pane.
-        GridPane gridPane = GameManager.getInstance().getGridPane();
+        // Initialize the image from the current(old) location that will override the agent.
+        Image imagePlace = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" 
+                + scenario.getEnvironment().getStadiumIncredienceOfPoint(pointOld).getFileName()));
+        final ImageView imageViewPlace = new ImageView(imagePlace);
+        imageViewPlace.setId(StadiumIncredience.AGENT.getVocabulary());
+        imageViewPlace.setFitWidth(40);
+        imageViewPlace.setPreserveRatio(true);
+        imageViewPlace.setSmooth(true);
+        imageViewPlace.setCache(true);
 
-        // Keep the image that kas been overriden from the previous move.
-        final ImageView overridenImageClone = overridenImage == null ? null : new ImageView(overridenImage.getImage());
-        if (overridenImageClone != null) {
-            overridenImageClone.setId(overridenImage.getId());
-            overridenImageClone.setFitWidth(40);
-            overridenImageClone.setPreserveRatio(true);
-            overridenImageClone.setSmooth(true);
-            overridenImageClone.setCache(true);
-        }
-
-        // Save the image from the next location.
-        for (Node node : gridPane.getChildren()) {
-            if (node instanceof ImageView) {
-                ImageView imageView = (ImageView) node;
-
-                // Get the index of this child.
-                Integer row = GridPane.getRowIndex(node);
-                Integer column = GridPane.getColumnIndex(node);
-                Point gridLocation = new Point(column, row);
-
-                if (pointNew.equals(gridLocation)) {
-                    // Do not change this image in case of another agent image. This image will be replaced from the first agent that moved to this point.
-                    if (imageView.getId() == StadiumIncredience.AGENT.getVocabulary()) {
-                        overridenImage = null;
-                    } else {
-                        overridenImage = imageView;
-                    }
-                    break;
-                }
-            }
-        }
-        
         // Initialize the agent image.
-        Image image = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" + StadiumIncredience.AGENT.getFileName()));
-        final ImageView imageView = new ImageView(image);
-        imageView.setId(StadiumIncredience.AGENT.getVocabulary());
-        imageView.setFitWidth(40);
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-        imageView.setCache(true);
+        Image imageAgent = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" + StadiumIncredience.AGENT.getFileName()));
+        final ImageView imageViewAgent = new ImageView(imageAgent);
+        imageViewAgent.setId(StadiumIncredience.AGENT.getVocabulary());
+        imageViewAgent.setFitWidth(40);
+        imageViewAgent.setPreserveRatio(true);
+        imageViewAgent.setSmooth(true);
+        imageViewAgent.setCache(true);
 
         // Create the agent to the next location.
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (overridenImageClone != null) {
-                    gridPane.add(overridenImageClone, pointOld.getX(), pointOld.getY());
-                }
-                gridPane.add(imageView, pointNew.getX(), pointNew.getY());
+                GridPane gridPane = GameManager.getInstance().getGridPane();
+                gridPane.add(imageViewPlace, pointOld.getX(), pointOld.getY());
+                gridPane.add(imageViewAgent, pointNew.getX(), pointNew.getY());
             }
         });
+    }
+
+    private void sleepAgent() throws InterruptedException {
+        Random random = new Random();
+        int sleepTime = 100 + random.nextInt(400);
+        logger.debug("Agent" + id + " - Sleeping for " + sleepTime + "ms.");
+        Thread.sleep(sleepTime);
+    }
+
+    private void letsGoHome() {
+        // Create a new agent plan to send the agent home.
+        agentPlan = new AgentPlan();
+        List<StadiumIncredience> actionList = new ArrayList<>(1);
+        actionList.add(StadiumIncredience.SPITI_AGENT);
+        agentPlan.setActionList(actionList);
+        currentPlanTargetIndex = 0;
     }
 
     @Override

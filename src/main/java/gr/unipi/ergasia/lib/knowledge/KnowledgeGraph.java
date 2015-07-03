@@ -41,6 +41,11 @@ public class KnowledgeGraph {
             if (node.getStadiumIncredience().equals(incredience)) {
                 return node;
             }
+            for (StadiumIncredience current : node.getNeightborList()) {
+                if (current.equals(incredience)) {
+                    return node;
+                }
+            }
         }
         return null;
     }

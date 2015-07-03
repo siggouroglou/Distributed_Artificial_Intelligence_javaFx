@@ -17,6 +17,11 @@ public class GraphLine {
         this.destination = destination;
     }
 
+    public GraphLine(GraphLine item) {
+        this.source = new KnowledgeNode(item.getSource());
+        this.destination = new KnowledgeNode(item.getDestination());
+    }
+
     public KnowledgeNode getDestination() {
         return destination;
     }

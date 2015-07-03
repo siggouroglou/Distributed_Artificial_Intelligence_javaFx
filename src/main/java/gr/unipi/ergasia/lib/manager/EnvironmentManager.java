@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,7 +57,7 @@ public class EnvironmentManager {
                 // For each row.
                 for (String line : FileUtils.readLines(file, StandardCharsets.UTF_8)) {
                     // Initialize the row list.
-                    List<StadiumIncredience> rowList = new LinkedList<>();
+                    List<StadiumIncredience> rowList = new ArrayList<>();
 
                     // Get the row string.
                     environment.setHeight(++height);

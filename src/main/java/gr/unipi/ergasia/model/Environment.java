@@ -21,7 +21,7 @@ public class Environment {
         this.width = 0;
         this.height = 0;
         this.agentCount = 0;
-        this.stadium = new LinkedList<>();
+        this.stadium = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -88,12 +88,24 @@ public class Environment {
             int col = 0;
             for (StadiumIncredience incredience : rowList) {
                 if (incredience.equals(stadiumIncredience)) {
-                    pointOfItemList.add(new Point(col++, row));
+                    pointOfItemList.add(new Point(col, row));
                 }
+                col++;
             }
             row++;
         }
 
         return pointOfItemList;
+    }
+
+    public StadiumIncredience getStadiumIncredienceOfPoint(Point point) {
+        // Validation.
+        if (point.getX() < 0 || point.getX() >= width) {
+            return null;
+        }
+        if (point.getY() < 0 || point.getY() >= width) {
+            return null;
+        }
+        return stadium.get(point.getY()).get(point.getX());
     }
 }

@@ -23,6 +23,13 @@ public class KnowledgeNode {
         this.visitedTimes = 0;
     }
 
+    public KnowledgeNode(KnowledgeNode knowledgeNode) {
+        this.point = knowledgeNode.getPoint();
+        this.stadiumIncredience = knowledgeNode.getStadiumIncredience();
+        this.neightborList = knowledgeNode.getNeightborList();
+        this.visitedTimes = knowledgeNode.getVisitedTimes();
+    }
+
     public Point getPoint() {
         return point;
     }
