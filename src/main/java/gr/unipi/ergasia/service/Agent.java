@@ -8,6 +8,7 @@ import gr.unipi.ergasia.lib.manager.GameManager;
 import gr.unipi.ergasia.model.AgentPlan;
 import gr.unipi.ergasia.model.Environment;
 import gr.unipi.ergasia.model.Point;
+import gr.unipi.ergasia.model.ScenarioState;
 import gr.unipi.ergasia.model.StadiumIncredience;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ public class Agent extends Task<Object> {
     private final int id;
     private final Scenario scenario;
     private final KnowledgeGraph knowledgeGraph;
+    private final Point homeLocation;
     private AgentPlan agentPlan;
     private Point currentLocation;
     private int agentStepCount;
@@ -39,6 +41,7 @@ public class Agent extends Task<Object> {
     public Agent(int id, Scenario scenario, AgentPlan agentPlan, Point startLocation) {
         this.id = id;
         this.scenario = scenario;
+        this.homeLocation = startLocation;
         this.agentPlan = agentPlan;
         this.currentLocation = startLocation;
         this.agentStepCount = 0;
@@ -52,6 +55,10 @@ public class Agent extends Task<Object> {
         this.knowledgeGraph = new KnowledgeGraph();
     }
 
+    public Point getHomeLocation() {
+        return homeLocation;
+    }
+
     public Point getCurrentLocation() {
         return currentLocation;
     }
@@ -60,10 +67,17 @@ public class Agent extends Task<Object> {
         return knowledgeGraph;
     }
 
+    public AgentPlan getAgentPlan() {
+        return agentPlan;
+    }
+    
+    public void setAgentPlan(AgentPlan agentPlan){
+        this.agentPlan = agentPlan;
+    }
+
     @Override
     protected Object call() throws Exception {
         // Point objects that store the old and the next location.
-        final Point homeLocation = currentLocation;
         Point oldLocation = currentLocation;
         Point nextLocation = currentLocation;
 
@@ -71,6 +85,9 @@ public class Agent extends Task<Object> {
             // Loop till the agent complete his plan.
             boolean isPlanCompleted = false;
             while (true) {
+                // Check the scenario state.
+                checkScenarioState();
+                
                 // Check if agent has completed with the plan.
                 if (currentPlanTargetIndex == agentPlan.getActionList().size()) {
                     logger.debug("Agent" + id + " - I completed my plan. Lets go home.");
@@ -118,6 +135,9 @@ public class Agent extends Task<Object> {
                     logger.debug("Agent" + id + " - I do not know the current location" + currentLocation + " so go to next less known point.");
                     nextLocation = getNextPoint(currentLocation);
                 }
+                
+                // Check the scenario state.
+                checkScenarioState();
 
                 // Move to the next location and update the current.
                 moveToPoint(currentLocation, nextLocation);
@@ -295,6 +315,16 @@ public class Agent extends Task<Object> {
         return nextLocation;
     }
 
+    private void checkScenarioState() throws InterruptedException {
+        // Check the scenario state.
+        while(scenario.getScenarioState() != ScenarioState.RUNNING) {
+            if(scenario.getScenarioState() == ScenarioState.STOPPED){
+                this.cancel();
+            }
+            sleepAgentWithTime(50);
+        }
+    }
+
     private void moveToPoint(final Point pointOld, final Point pointNew) {
         // Initialize the image from the current(old) location that will override the agent.
         Image imagePlace = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/"
@@ -330,7 +360,11 @@ public class Agent extends Task<Object> {
         Random random = new Random();
         int sleepTime = 100 + random.nextInt(400);
         logger.debug("Agent" + id + " - Sleeping for " + sleepTime + "ms.");
-        Thread.sleep(sleepTime);
+        sleepAgentWithTime(sleepTime);
+    }
+
+    private void sleepAgentWithTime(long timeToSleep) throws InterruptedException {
+        Thread.sleep(timeToSleep);
     }
 
     private void letsGoHome() {
