@@ -63,17 +63,21 @@ public class Agent extends Task<Object> {
     @Override
     protected Object call() throws Exception {
         // Point objects that store the old and the next location.
+        final Point homeLocation = currentLocation;
         Point oldLocation = currentLocation;
         Point nextLocation = currentLocation;
 
         try {
             // Loop till the agent complete his plan.
             boolean isPlanCompleted = false;
-            boolean isAgentFinished = false;
             while (true) {
                 // Check if agent has completed with the plan.
                 if (currentPlanTargetIndex == agentPlan.getActionList().size()) {
                     logger.debug("Agent" + id + " - I completed my plan. Lets go home.");
+                    if (isPlanCompleted) {
+                        moveToPoint(currentLocation, homeLocation);
+                        break;
+                    }
                     isPlanCompleted = true;
                     letsGoHome();
                 }
@@ -101,9 +105,6 @@ public class Agent extends Task<Object> {
                 // Check if i arrived to my plan.
                 StadiumIncredience targetIncredience = agentPlan.getActionList().get(currentPlanTargetIndex);
                 if (isLocationNeightborEqualTo(currentLocation, targetIncredience)) {
-                    if (isPlanCompleted) {
-                        isAgentFinished = true;
-                    }
                     logger.debug("Agent" + id + " - I arrived to my plan and i will target to next plan now.");
                     currentPlanTargetIndex++;
                 }
@@ -200,16 +201,18 @@ public class Agent extends Task<Object> {
     private synchronized void knowledgeExchange(Agent agent) {
         // Get this agents' knowledgeGraph data structure.
         KnowledgeGraph agentKnowledge = agent.getKnowledgeGraph();
-
-        // Clone collection of nodes to change the visited times.
         List<KnowledgeNode> cloneNodeList = new ArrayList<>(agentKnowledge.getNodeSet().size());
-        for (KnowledgeNode item : agentKnowledge.getNodeSet()) {
-            cloneNodeList.add(new KnowledgeNode(item));
-        }
         List<GraphLine> cloneLineList = new ArrayList<>(agentKnowledge.getLineSet().size());
-        for (GraphLine item : agentKnowledge.getLineSet()) {
-            cloneLineList.add(new GraphLine(item));
-        }
+
+//        // Clone collection of nodes to change the visited times.
+//        List<KnowledgeNode> cloneNodeList = new ArrayList<>(agentKnowledge.getNodeSet().size());
+//        for (KnowledgeNode item : agentKnowledge.getNodeSet()) {
+//            cloneNodeList.add(new KnowledgeNode(item));
+//        }
+//        List<GraphLine> cloneLineList = new ArrayList<>(agentKnowledge.getLineSet().size());
+//        for (GraphLine item : agentKnowledge.getLineSet()) {
+//            cloneLineList.add(new GraphLine(item));
+//        }
 
         // Merge it with the current agent's knowledgeGraph data structure. Using HashSet duplicates are not inserted.
         knowledgeGraph.getNodeSet().addAll(cloneNodeList);
@@ -294,7 +297,7 @@ public class Agent extends Task<Object> {
 
     private void moveToPoint(final Point pointOld, final Point pointNew) {
         // Initialize the image from the current(old) location that will override the agent.
-        Image imagePlace = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/" 
+        Image imagePlace = new Image(getClass().getResourceAsStream("/files/images/stadiumIncredience/"
                 + scenario.getEnvironment().getStadiumIncredienceOfPoint(pointOld).getFileName()));
         final ImageView imageViewPlace = new ImageView(imagePlace);
         imageViewPlace.setId(StadiumIncredience.AGENT.getVocabulary());
