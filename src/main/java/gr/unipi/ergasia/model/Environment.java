@@ -1,5 +1,6 @@
 package gr.unipi.ergasia.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
  * @author siggouroglou@gmail.com
  */
 public class Environment {
+
     private String title;
     private int width;
     private int height;
@@ -19,7 +21,7 @@ public class Environment {
         this.width = 0;
         this.height = 0;
         this.agentCount = 0;
-        this.stadium = new LinkedList<>();
+        this.stadium = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -60,5 +62,50 @@ public class Environment {
 
     public void setStadium(List<List<StadiumIncredience>> stadium) {
         this.stadium = stadium;
+    }
+
+    public List<StadiumIncredience> getBuildings() {
+        List<StadiumIncredience> environmentBuildingList = new LinkedList<>();
+
+        // For each element of this stadium.
+        for (List<StadiumIncredience> rowList : stadium) {
+            for (StadiumIncredience incredience : rowList) {
+                if (incredience.isBuilding()) {
+                    environmentBuildingList.add(incredience);
+                }
+            }
+        }
+
+        return environmentBuildingList;
+    }
+
+    public List<Point> getPointsOfItem(StadiumIncredience stadiumIncredience) {
+        final List<Point> pointOfItemList = new ArrayList<>();
+
+        // Scan the stadium and capture the location of this incredience.
+        int row = 0;
+        for (List<StadiumIncredience> rowList : stadium) {
+            int col = 0;
+            for (StadiumIncredience incredience : rowList) {
+                if (incredience.equals(stadiumIncredience)) {
+                    pointOfItemList.add(new Point(col, row));
+                }
+                col++;
+            }
+            row++;
+        }
+
+        return pointOfItemList;
+    }
+
+    public StadiumIncredience getStadiumIncredienceOfPoint(Point point) {
+        // Validation.
+        if (point.getX() < 0 || point.getX() >= width) {
+            return null;
+        }
+        if (point.getY() < 0 || point.getY() >= width) {
+            return null;
+        }
+        return stadium.get(point.getY()).get(point.getX());
     }
 }

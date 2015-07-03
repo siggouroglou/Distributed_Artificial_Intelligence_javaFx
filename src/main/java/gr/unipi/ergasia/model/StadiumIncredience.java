@@ -150,12 +150,12 @@ public enum StadiumIncredience {
         List<StadiumIncredience> allBuildings = getAllBuildings();
         List<StadiumIncredience> allRoads = getAllRoads();
         List<StadiumIncredience> buildingsWithRoadsList = Stream.concat(allBuildings.stream(), allRoads.stream()).collect(Collectors.toList());
-        
+
         LinkedList<StadiumIncredience> linkedList = new LinkedList<>(buildingsWithRoadsList);
         linkedList.add(SPITI_AGENT);
         linkedList.add(PRASINO);
         linkedList.add(KENOS_XOROS);
-        
+
         return linkedList;
     }
 
@@ -216,6 +216,24 @@ public enum StadiumIncredience {
                 return "Κενός Χώρος";
             default:
                 return "";
+        }
+    }
+
+    boolean isBuilding() {
+        switch (this) {
+            case ASTYNOMIA:
+            case FOURNOS:
+            case FARMAKEIO:
+            case FAST_FOOD:
+            case GUMNASTIRIO:
+            case KAFETERIA:
+            case KREOPOLEIO:
+            case MAGAZI_PAPOUTSIA:
+            case MAGAZI_ROUXA:
+            case MANABIKO:
+                return true;
+            default:
+                return false;
         }
     }
 
