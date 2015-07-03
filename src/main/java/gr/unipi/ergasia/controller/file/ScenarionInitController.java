@@ -254,6 +254,7 @@ public class ScenarionInitController implements Initializable {
 
         // Create the scenario.
         Scenario scenario = new Scenario.ScenarioBuilder()
+                .title(scenarioTitleTextField.getText())
                 .environment(environment)
                 .build();
         scenario.setScenarioState(ScenarioState.READY);

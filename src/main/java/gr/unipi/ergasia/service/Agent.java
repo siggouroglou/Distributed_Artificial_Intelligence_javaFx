@@ -32,27 +32,49 @@ public class Agent extends Task<Object> {
     private final Scenario scenario;
     private final KnowledgeGraph knowledgeGraph;
     private final Point homeLocation;
-    private AgentPlan agentPlan;
+    private final AgentPlan agentPlan;
+    private AgentPlan currentAgentPlan;
     private Point currentLocation;
     private int agentStepCount;
     private int agentKnowledgeExchangeCount;
-    private int currentPlanTargetIndex;
+    private int agentMoveDijkstraCount;
+    private int agentMoveLeastVisitedCount;
+    private int currentAgentPlanIndex;
 
     public Agent(int id, Scenario scenario, AgentPlan agentPlan, Point startLocation) {
         this.id = id;
         this.scenario = scenario;
         this.homeLocation = startLocation;
         this.agentPlan = agentPlan;
+        this.currentAgentPlan = agentPlan;
         this.currentLocation = startLocation;
         this.agentStepCount = 0;
         this.agentKnowledgeExchangeCount = 0;
-        this.currentPlanTargetIndex = 0;
+        this.agentMoveDijkstraCount = 0;
+        this.agentMoveLeastVisitedCount = 0;
+        this.currentAgentPlanIndex = 0;
 
         // Set the knoledge root node.
         KnowledgeNode rootNode = new KnowledgeNode();
         rootNode.setPoint(startLocation);
         rootNode.setStadiumIncredience(StadiumIncredience.SPITI_AGENT);
         this.knowledgeGraph = new KnowledgeGraph();
+    }
+
+    public int getAgentStepCount() {
+        return agentStepCount;
+    }
+
+    public int getAgentKnowledgeExchangeCount() {
+        return agentKnowledgeExchangeCount;
+    }
+
+    public int getAgentMoveDijkstraCount() {
+        return agentMoveDijkstraCount;
+    }
+
+    public int getAgentMoveLeastVisitedCount() {
+        return agentMoveLeastVisitedCount;
     }
 
     public Point getHomeLocation() {
@@ -70,9 +92,13 @@ public class Agent extends Task<Object> {
     public AgentPlan getAgentPlan() {
         return agentPlan;
     }
-    
-    public void setAgentPlan(AgentPlan agentPlan){
-        this.agentPlan = agentPlan;
+
+    public AgentPlan getCurrentAgentPlan() {
+        return currentAgentPlan;
+    }
+
+    public void setCurrentAgentPlan(AgentPlan currentAgentPlan) {
+        this.currentAgentPlan = currentAgentPlan;
     }
 
     @Override
@@ -89,7 +115,7 @@ public class Agent extends Task<Object> {
                 checkScenarioState();
                 
                 // Check if agent has completed with the plan.
-                if (currentPlanTargetIndex == agentPlan.getActionList().size()) {
+                if (currentAgentPlanIndex == currentAgentPlan.getActionList().size()) {
                     logger.debug("Agent" + id + " - I completed my plan. Lets go home.");
                     if (isPlanCompleted) {
                         moveToPoint(currentLocation, homeLocation);
@@ -120,20 +146,20 @@ public class Agent extends Task<Object> {
                 }
 
                 // Check if i arrived to my plan.
-                StadiumIncredience targetIncredience = agentPlan.getActionList().get(currentPlanTargetIndex);
+                StadiumIncredience targetIncredience = currentAgentPlan.getActionList().get(currentAgentPlanIndex);
                 if (isLocationNeightborEqualTo(currentLocation, targetIncredience)) {
                     logger.debug("Agent" + id + " - I arrived to my plan and i will target to next plan now.");
-                    currentPlanTargetIndex++;
+                    currentAgentPlanIndex++;
                 }
 
                 // Check if i know the location of the target point of my plan.
                 KnowledgeNode targetNode = knowledgeGraph.findByIncredience(targetIncredience);
                 if (targetNode != null) {
                     logger.debug("Agent" + id + " - I know the current location" + currentLocation + " so find the nearest point to move to.");
-                    nextLocation = getNextNearestPoint(targetNode, knowledgeNode);
+                    nextLocation = getNextNearestDijkstraPoint(targetNode, knowledgeNode);
                 } else {
                     logger.debug("Agent" + id + " - I do not know the current location" + currentLocation + " so go to next less known point.");
-                    nextLocation = getNextPoint(currentLocation);
+                    nextLocation = getNextLeastVisitedPoint(currentLocation);
                 }
                 
                 // Check the scenario state.
@@ -237,6 +263,9 @@ public class Agent extends Task<Object> {
         // Merge it with the current agent's knowledgeGraph data structure. Using HashSet duplicates are not inserted.
         knowledgeGraph.getNodeSet().addAll(cloneNodeList);
         knowledgeGraph.getLineSet().addAll(cloneLineList);
+        
+        // Update the agentKnowledge exchange counter for statistics.
+        agentKnowledgeExchangeCount++;
     }
 
     private boolean isLocationNeightborEqualTo(Point point, StadiumIncredience incredience) {
@@ -254,7 +283,7 @@ public class Agent extends Task<Object> {
         return false;
     }
 
-    private Point getNextNearestPoint(KnowledgeNode sourceNode, KnowledgeNode destinationNode) {
+    private Point getNextNearestDijkstraPoint(KnowledgeNode sourceNode, KnowledgeNode destinationNode) {
         // Run dijkstra algorithm to find the best next point.
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(knowledgeGraph);
         dijkstra.execute(sourceNode);
@@ -262,14 +291,17 @@ public class Agent extends Task<Object> {
 
         // Check the case where the first plan is next to agents house.
         if (path == null) {
-            return getNextPoint(destinationNode.getPoint());
+            return getNextLeastVisitedPoint(destinationNode.getPoint());
         }
+        
+        // Update the count for statistics.
+        agentMoveDijkstraCount++;
 
         // Return the last-1 point. The last point is the current location.
         return path.get(path.size() > 1 ? path.size() - 2 : 0).getPoint();
     }
 
-    private synchronized Point getNextPoint(Point point) {
+    private synchronized Point getNextLeastVisitedPoint(Point point) {
         // Get the points i am interesting in.
         Point[] pointToSearchArray = new Point[]{
             new Point(point.getX(), point.getY() - 1),
@@ -311,6 +343,9 @@ public class Agent extends Task<Object> {
         if (nextLocation == null) {
             throw new NullPointerException("This location is not including a road near.");
         }
+        
+        // Update the count for statistics.
+        agentMoveLeastVisitedCount++;
 
         return nextLocation;
     }
@@ -346,14 +381,14 @@ public class Agent extends Task<Object> {
         imageViewAgent.setCache(true);
 
         // Create the agent to the next location.
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                GridPane gridPane = GameManager.getInstance().getGridPane();
-                gridPane.add(imageViewPlace, pointOld.getX(), pointOld.getY());
-                gridPane.add(imageViewAgent, pointNew.getX(), pointNew.getY());
-            }
+        Platform.runLater(() -> {
+            GridPane gridPane = GameManager.getInstance().getGridPane();
+            gridPane.add(imageViewPlace, pointOld.getX(), pointOld.getY());
+            gridPane.add(imageViewAgent, pointNew.getX(), pointNew.getY());
         });
+        
+        // Update the step count for statistics.
+        agentStepCount++;
     }
 
     private void sleepAgent() throws InterruptedException {
@@ -369,11 +404,11 @@ public class Agent extends Task<Object> {
 
     private void letsGoHome() {
         // Create a new agent plan to send the agent home.
-        agentPlan = new AgentPlan();
+        currentAgentPlan = new AgentPlan();
         List<StadiumIncredience> actionList = new ArrayList<>(1);
         actionList.add(StadiumIncredience.SPITI_AGENT);
-        agentPlan.setActionList(actionList);
-        currentPlanTargetIndex = 0;
+        currentAgentPlan.setActionList(actionList);
+        currentAgentPlanIndex = 0;
     }
 
     @Override
