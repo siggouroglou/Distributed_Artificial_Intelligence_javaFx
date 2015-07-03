@@ -74,11 +74,8 @@ public class Scenario extends Task<Object> {
                 durationSeconds++;
 
                 // Update the label.
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        GameManager.getInstance().getDurationSecondsLabel().setText(String.format("%02d:%02d:%02d", durationSeconds / 3600, (durationSeconds % 3600) / 60, (durationSeconds % 60)));
-                    }
+                Platform.runLater(() -> {
+                    GameManager.getInstance().getDurationSecondsLabel().setText(String.format("%02d:%02d:%02d", durationSeconds / 3600, (durationSeconds % 3600) / 60, (durationSeconds % 60)));
                 });
             }
         }
@@ -153,11 +150,8 @@ public class Scenario extends Task<Object> {
         final GameManager gameManager = GameManager.getInstance();
         gameManager.setScenario(scenario);
         gameManager.setAgentList(agentList);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                gameManager.initializeGame();
-            }
+        Platform.runLater(() -> {
+            gameManager.initializeGame();
         });
     }
 

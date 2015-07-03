@@ -1,5 +1,6 @@
 package gr.unipi.ergasia.service;
 
+import gr.unipi.ergasia.controller.GameEditAgentPlanController;
 import gr.unipi.ergasia.lib.algorithm.DijkstraAlgorithm;
 import gr.unipi.ergasia.lib.knowledge.GraphLine;
 import gr.unipi.ergasia.lib.knowledge.KnowledgeGraph;
@@ -16,9 +17,15 @@ import java.util.List;
 import java.util.Random;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 /**
@@ -61,6 +68,11 @@ public class Agent extends Task<Object> {
         this.knowledgeGraph = new KnowledgeGraph();
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Getters-Setters">
+    public int getId() {
+        return id;
+    }
+
     public int getAgentStepCount() {
         return agentStepCount;
     }
@@ -101,6 +113,11 @@ public class Agent extends Task<Object> {
         this.currentAgentPlan = currentAgentPlan;
     }
 
+    public int getCurrentAgentPlanIndex() {
+        return currentAgentPlanIndex;
+    }
+    //</editor-fold>
+
     @Override
     protected Object call() throws Exception {
         // Point objects that store the old and the next location.
@@ -113,7 +130,7 @@ public class Agent extends Task<Object> {
             while (true) {
                 // Check the scenario state.
                 checkScenarioState();
-                
+
                 // Check if agent has completed with the plan.
                 if (currentAgentPlanIndex == currentAgentPlan.getActionList().size()) {
                     logger.debug("Agent" + id + " - I completed my plan. Lets go home.");
@@ -161,7 +178,7 @@ public class Agent extends Task<Object> {
                     logger.debug("Agent" + id + " - I do not know the current location" + currentLocation + " so go to next less known point.");
                     nextLocation = getNextLeastVisitedPoint(currentLocation);
                 }
-                
+
                 // Check the scenario state.
                 checkScenarioState();
 
@@ -180,6 +197,7 @@ public class Agent extends Task<Object> {
         return null;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Call method implementation">
     private KnowledgeNode addKnowledge(Point pointOld, Point pointNew) {
         // The knowledgeGraph that will be created.
         KnowledgeNode knowledgeNode = new KnowledgeNode();
@@ -259,11 +277,10 @@ public class Agent extends Task<Object> {
 //        for (GraphLine item : agentKnowledge.getLineSet()) {
 //            cloneLineList.add(new GraphLine(item));
 //        }
-
         // Merge it with the current agent's knowledgeGraph data structure. Using HashSet duplicates are not inserted.
         knowledgeGraph.getNodeSet().addAll(cloneNodeList);
         knowledgeGraph.getLineSet().addAll(cloneLineList);
-        
+
         // Update the agentKnowledge exchange counter for statistics.
         agentKnowledgeExchangeCount++;
     }
@@ -293,7 +310,7 @@ public class Agent extends Task<Object> {
         if (path == null) {
             return getNextLeastVisitedPoint(destinationNode.getPoint());
         }
-        
+
         // Update the count for statistics.
         agentMoveDijkstraCount++;
 
@@ -343,7 +360,7 @@ public class Agent extends Task<Object> {
         if (nextLocation == null) {
             throw new NullPointerException("This location is not including a road near.");
         }
-        
+
         // Update the count for statistics.
         agentMoveLeastVisitedCount++;
 
@@ -352,11 +369,11 @@ public class Agent extends Task<Object> {
 
     private void checkScenarioState() throws InterruptedException {
         // Check the scenario state.
-        while(scenario.getScenarioState() != ScenarioState.RUNNING) {
-            if(scenario.getScenarioState() == ScenarioState.STOPPED){
+        while (scenario.getScenarioState() != ScenarioState.RUNNING) {
+            if (scenario.getScenarioState() == ScenarioState.STOPPED) {
                 this.cancel();
             }
-            sleepAgentWithTime(50);
+            sleepAgent(50);
         }
     }
 
@@ -380,13 +397,42 @@ public class Agent extends Task<Object> {
         imageViewAgent.setSmooth(true);
         imageViewAgent.setCache(true);
 
+        // Add the image listener.
+        final Agent thisAgent = this;
+        imageViewAgent.setOnMouseClicked((MouseEvent event) -> {
+            Platform.runLater(() -> {
+                try {
+                    // Stages and owners.
+                    Stage currentStage = (Stage) GameManager.getInstance().getGridPane().getScene().getWindow();
+                    Stage editStage = new Stage();
+                    editStage.initModality(Modality.NONE);
+                    editStage.initOwner(currentStage);
+                    editStage.setTitle("ΚΤΝ - Επεξεργασία Πλάνου Ενεργού Πράκτορα");
+                    editStage.getIcons().add(new Image("/files/images/unipi_logo.jpg"));
+
+                    // Load the view.
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GameEditAgentPlanView.fxml"));
+                    Parent root = (Parent) loader.load();
+                    editStage.setScene(new Scene(root));
+
+                    GameEditAgentPlanController controller = (GameEditAgentPlanController) loader.getController();
+                    controller.setAgent(thisAgent);
+                    controller.loadData();
+
+                    /// Show it.
+                    editStage.show();
+                } catch (Exception ignorred) {
+                }
+            });
+        });
+
         // Create the agent to the next location.
         Platform.runLater(() -> {
             GridPane gridPane = GameManager.getInstance().getGridPane();
             gridPane.add(imageViewPlace, pointOld.getX(), pointOld.getY());
             gridPane.add(imageViewAgent, pointNew.getX(), pointNew.getY());
         });
-        
+
         // Update the step count for statistics.
         agentStepCount++;
     }
@@ -395,10 +441,10 @@ public class Agent extends Task<Object> {
         Random random = new Random();
         int sleepTime = 100 + random.nextInt(400);
         logger.debug("Agent" + id + " - Sleeping for " + sleepTime + "ms.");
-        sleepAgentWithTime(sleepTime);
+        sleepAgent(sleepTime);
     }
 
-    private void sleepAgentWithTime(long timeToSleep) throws InterruptedException {
+    private void sleepAgent(long timeToSleep) throws InterruptedException {
         Thread.sleep(timeToSleep);
     }
 
@@ -410,6 +456,7 @@ public class Agent extends Task<Object> {
         currentAgentPlan.setActionList(actionList);
         currentAgentPlanIndex = 0;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
